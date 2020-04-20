@@ -44,14 +44,6 @@ class Moderation(commands.Cog):
             await self.dm(member, dm_msg)
             await member.kick()
             await ctx.send("I've kicked {}.".format(member))
-            emb = Embed(title="Member Kicked", colour=Colour.red())
-            emb.add_field(name="Member:", value=member, inline=True)
-            emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
-            if reason == "":
-                reason = "No reason specified."
-            emb.add_field(name="Reason:", value=reason, inline=True)
-            logchannel = self.bot.logs_channel
-            await logchannel.send("", embed=emb)
         except errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
@@ -84,15 +76,6 @@ class Moderation(commands.Cog):
                 await self.dm(member, dm_msg)
                 await member.ban(delete_message_days=0)
                 await ctx.send("I've banned {}.".format(member))
-                emb = Embed(title="Member Banned", colour=Colour.red())
-                emb.add_field(name="Member:", value=member.name, inline=True)
-                emb.add_field(
-                    name="Mod:", value=ctx.message.author.name, inline=True)
-                if reason == "":
-                    reason = "No reason specified."
-                emb.add_field(name="Reason:", value=reason, inline=True)
-                logchannel = self.bot.logs_channel
-                await logchannel.send("", embed=emb)
             except errors.Forbidden:
                 await ctx.send("💢 I dont have permission to do this.")
 
@@ -109,15 +92,6 @@ class Moderation(commands.Cog):
         try:
             await ctx.guild.ban(member)
             await ctx.send("I've banned ID: {}.".format(uid))
-            emb = Embed(title="Member Banned by ID", colour=Colour.red())
-            emb.add_field(name="ID:", value=uid, inline=True)
-            emb.add_field(
-                name="Mod:", value=ctx.message.author.name, inline=True)
-            if reason == "":
-                reason = "No reason specified."
-            emb.add_field(name="Reason:", value=reason, inline=True)
-            logchannel = self.bot.logs_channel
-            await logchannel.send("", embed=emb)
         except errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
@@ -133,15 +107,6 @@ class Moderation(commands.Cog):
             await channel.send(":lock: Channel locked.")
         else:
             await channel.send(":lock: Channel locked. The given reason is: {}".format(reason))
-        emb = Embed(title="Lockdown", colour=Colour.gold())
-        ch = "{} ({})".format(ctx.channel.mention, ctx.channel.name)
-        emb.add_field(name="Channel:", value=ch, inline=True)
-        emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
-        if reason == "":
-            reason = "No reason specified."
-        emb.add_field(name="Reason:", value=reason, inline=True)
-        logchannel = self.bot.logs_channel
-        await logchannel.send("", embed=emb)
 
     @commands.has_permissions(manage_messages=True)
     @commands.command()
@@ -152,12 +117,6 @@ class Moderation(commands.Cog):
         channel = ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=True)
         await channel.send(":unlock: Channel Unlocked")
-        emb = Embed(title="Unlock", colour=Colour.gold())
-        ch = "{} ({})".format(ctx.channel.mention, ctx.channel.name)
-        emb.add_field(name="Channel:", value=ch, inline=True)
-        emb.add_field(name="Mod:", value=ctx.message.author.name, inline=True)
-        logchannel = self.bot.logs_channel
-        await logchannel.send("", embed=emb)
 
     # WARN STUFF moved to warn.py
 
@@ -177,12 +136,6 @@ class Moderation(commands.Cog):
                     ctx.guild.name)
                 await self.dm(member, dm_msg)
                 await ctx.send(":thumbsup: {} has been approved".format(member))
-                emb = Embed(title="Member Approved", colour=Colour.blue())
-                emb.add_field(name="Member:", value=member, inline=True)
-                emb.add_field(
-                    name="Mod:", value=ctx.message.author, inline=True)
-                logchannel = self.bot.logs_channel
-                await logchannel.send("", embed=emb)
             except errors.Forbidden:
                 await ctx.send("💢 I dont have permission to do this.")
         elif self.bot.approved_role in member.roles:
@@ -220,16 +173,6 @@ class Moderation(commands.Cog):
                        "might extend the duration of the mute**"
                        "".format(ctx.guild.name, ctx.message.author, reason))
             await self.dm(member, msg)
-            emb = Embed(title="Member Muted", colour=Colour.purple())
-            emb.add_field(name="Member:", value=member, inline=True)
-            emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
-            if reason == "":
-                emb.add_field(name="Reason:",
-                              value="No reason specified.", inline=True)
-            else:
-                emb.add_field(name="Reason:", value=reason, inline=True)
-            logchannel = self.bot.logs_channel
-            await logchannel.send("", embed=emb)
         except errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
@@ -258,11 +201,6 @@ class Moderation(commands.Cog):
             await ctx.send("{} is no longer muted!".format(member))
             msg = "You have been unmuted in {}.".format(ctx.guild.name)
             await self.dm(member, msg)
-            emb = Embed(title="Member Unmuted", colour=Colour.purple())
-            emb.add_field(name="Member:", value=member, inline=True)
-            emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
-            logchannel = self.bot.logs_channel
-            await logchannel.send("", embed=emb)
         except errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
