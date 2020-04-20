@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from os import getenv
 from json import load
 from traceback import format_exception
