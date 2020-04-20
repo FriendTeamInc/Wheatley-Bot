@@ -43,8 +43,10 @@ async def on_ready():
 
     # Load addons
     addons = [
+        "general",
         "colors",
-        "moderation"
+        "moderation",
+        "system",
     ]
 
     # Notify if an addon fails to load.
