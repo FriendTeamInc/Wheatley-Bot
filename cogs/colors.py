@@ -47,7 +47,7 @@ class Colors(commands.Cog):
         await ctx.message.delete()
         lang = (ctx.invoked_with).capitalize()
         if not colorstring:
-            await ctx.send("{} You forgot to choose a {}!You can see the full list with `.list{}`"
+            await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"
                            "".format(user.mention, lang.lower(), lang.lower()))
             return
 
