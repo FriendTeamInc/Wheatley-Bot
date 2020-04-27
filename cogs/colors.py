@@ -51,7 +51,7 @@ class Colors(commands.Cog):
                            "".format(user.mention, lang.lower(), lang.lower()))
             return
 
-        colorstring = colorstring.lower() + "_role"
+        colorrole = colorstring.lower() + "_role"
 
         applied_colors = []
         for color in self.colors:
@@ -62,8 +62,8 @@ class Colors(commands.Cog):
         else:
             cur_color = None
 
-        if colorstring in self.colors:
-            await self.change(ctx, self.colors[colorstring], lang, cur_color, user)
+        if colorrole in self.colors:
+            await self.change(ctx, self.colors[colorrole], lang, cur_color, user)
         else:
             await ctx.send("{} `{}` is not a permissible {}."
                            "".format(user.mention, colorstring, lang))
