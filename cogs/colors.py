@@ -62,7 +62,7 @@ class Colors(commands.Cog):
         else:
             cur_color = None
 
-        if self.colors[colorstring] is not None:
+        if colorstring in self.colors:
             await self.change(ctx, self.colors[colorstring], lang, cur_color, user)
         else:
             await ctx.send("{} `{}` is not a permissible {}."
