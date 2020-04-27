@@ -13,13 +13,14 @@ class Colors(commands.Cog):
         self.colors = {
             "turq_role":   self.bot.turq_role,
             "green_role":  self.bot.green_role,
-            "blue_role":   self.bot.blue_role,
+            "sky_role":    self.bot.sky_role,
             "purple_role": self.bot.purple_role,
             "red_role":    self.bot.red_role,
             "orange_role": self.bot.orange_role,
             "yellow_role": self.bot.yellow_role,
             "dark_role":   self.bot.dark_role,
             "pink_role":   self.bot.pink_role,
+            "blurp_role":  self.bot.blurp_role,
         }
 
     async def change(self, ctx, color, lang, cur_color, user):
