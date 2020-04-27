@@ -16,7 +16,7 @@ class System(commands.Cog):
         self.bot = bot
         __admin_role__ = self.bot.admin_role
 
-    @commands.has_permissions(administrator=True)
+    @commands.has_role("BotDev")
     @commands.command(aliases=["pull"])
     async def botupdate(self, ctx):
         await ctx.send("Pulling new git commits.")
@@ -26,8 +26,8 @@ class System(commands.Cog):
 
         await ctx.send("Changes pulled.")
 
-    @commands.has_permissions(administrator=True)
-    @commands.command()
+    @commands.has_role("BotDev")
+    @commands.command(aliases=["stop","restart"])
     async def botstop(self, ctx):
         await ctx.send("Exiting, should restart soon.")
         exit(0)
