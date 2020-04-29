@@ -45,7 +45,6 @@ class Colors(commands.Cog):
     async def color(self, ctx, colorstring=""):
         """Choose your colored role."""
         user = ctx.message.author
-        await ctx.message.delete()
         lang = (ctx.invoked_with).capitalize()
         if not colorstring:
             await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"

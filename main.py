@@ -93,15 +93,13 @@ async def on_command_error(ctx, error):
         for m in helpm:
             await ctx.send(m)
     elif isinstance(error, commands.errors.CommandOnCooldown):
-        try:
-            await ctx.message.delete()
-        except errors.NotFound:
-            pass
-        message = await ctx.message.channel.send("{} This command was used {:.2f}s ago and is on "
-                                                 "cooldown. Try again in {:.2f}s."
-                                                 "".format(ctx.message.author.mention,
-                                                           error.cooldown.per - error.retry_after,
-                                                           error.retry_after))
+        message = await ctx.message.channel.send(
+            "{} This command was used {:.2f}s ago and is on "
+            "cooldown. Try again in {:.2f}s."
+            "".format(ctx.message.author.mention,
+                error.cooldown.per - error.retry_after,
+                error.retry_after)
+            )
         await sleep(10)
         await message.delete()
     else:
