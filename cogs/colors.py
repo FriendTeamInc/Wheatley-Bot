@@ -21,7 +21,7 @@ class Colors(commands.Cog):
             "yellow_role": self.bot.yellow_role,
             "dark_role":   self.bot.dark_role,
             "pink_role":   self.bot.pink_role,
-            "blurp_role":  self.bot.blurp_role,
+            "blue_role":   self.bot.blue_role,
         }
 
     async def change(self, ctx, color, lang, cur_color, user):
