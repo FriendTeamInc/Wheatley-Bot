@@ -11,6 +11,7 @@ class Colors(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.colors = {
+            "white_role":  self.bot.white_role,
             "turq_role":   self.bot.turq_role,
             "green_role":  self.bot.green_role,
             "sky_role":    self.bot.sky_role,
