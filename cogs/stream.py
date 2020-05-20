@@ -29,7 +29,7 @@ class Streams(commands.Cog):
 
     @commands.command(pass_context=True, aliases=['stream'])
     async def streamer(self, ctx, streamstring=""):
-        """Choose your streamed role."""
+        """Choose your stream notif role."""
         user = ctx.message.author
         lang = (ctx.invoked_with).capitalize()
         if not streamstring:
@@ -54,14 +54,14 @@ class Streams(commands.Cog):
             await ctx.send("{} `{}` is not a permissible {}."
                            "".format(user.mention, streamstring, lang))
 
-    @commands.command(pass_context=True, aliases=['liststreams', 'liststreamer', 'liststream'])
-    async def liststreamers(self, ctx):
-        """List available streams"""
+    @commands.command(pass_context=True, aliases=['liststreamers', 'liststreamer', 'liststream'])
+    async def liststreams(self, ctx):
+        """List available streams to be notified of."""
         streamlist = ""
         for stream in self.streams:
-            stream = stream.split("_")[0]
+            stream = stream.split("_")[0].title()
             streamlist += "- " + stream + "\n"
-        await ctx.send(":art: **__Colored roles:__**\n" + streamlist)
+        await ctx.send(":tv: **__Streamer Notif roles:__**\n" + streamlist)
 
 
 def setup(bot):

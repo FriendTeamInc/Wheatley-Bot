@@ -70,7 +70,7 @@ class Colors(commands.Cog):
 
     @commands.command(pass_context=True, aliases=['listcolours', 'listcolor', 'listcolour'])
     async def listcolors(self, ctx):
-        """List available colors"""
+        """List available colors."""
         colorlist = ""
         for color in self.colors:
             color = color.split("_")[0]

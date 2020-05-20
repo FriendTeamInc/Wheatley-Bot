@@ -45,7 +45,7 @@ class Moderation(commands.Cog):
             await member.kick()
             await ctx.send("I've kicked {}.".format(member))
         except errors.Forbidden:
-            await ctx.send("💢 I dont have permission to do this.")
+            await ctx.send(":anger: I dont have permission to do this.")
 
     @commands.has_permissions(ban_members=True)
     @commands.command()
@@ -77,7 +77,7 @@ class Moderation(commands.Cog):
                 await member.ban(delete_message_days=0)
                 await ctx.send("I've banned {}.".format(member))
             except errors.Forbidden:
-                await ctx.send("💢 I dont have permission to do this.")
+                await ctx.send(":anger: I dont have permission to do this.")
 
     @commands.has_permissions(ban_members=True)
     @commands.command()
@@ -93,14 +93,12 @@ class Moderation(commands.Cog):
             await ctx.guild.ban(member)
             await ctx.send("I've banned ID: {}.".format(uid))
         except errors.Forbidden:
-            await ctx.send("💢 I dont have permission to do this.")
+            await ctx.send(":anger: I dont have permission to do this.")
 
     @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def lockdown(self, ctx, *, reason=""):
-        """
-        Lock down a channel
-        """
+        """Lock down a channel."""
         channel = ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=False)
         if reason == "":
@@ -111,9 +109,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def unlock(self, ctx):
-        """
-        Unlock a channel
-        """
+        """Unlock a channel."""
         channel = ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=True)
         await channel.send(":unlock: Channel Unlocked")
@@ -123,7 +119,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     @commands.command()
     async def approve(self, ctx, member: Member):
-        """Approve members"""
+        """Approve members."""
         try:
             member = ctx.message.mentions[0]
         except IndexError:
@@ -137,7 +133,7 @@ class Moderation(commands.Cog):
                 await self.dm(member, dm_msg)
                 await ctx.send(":thumbsup: {} has been approved".format(member))
             except errors.Forbidden:
-                await ctx.send("💢 I dont have permission to do this.")
+                await ctx.send(":anger: I dont have permission to do this.")
         elif self.bot.approved_role in member.roles:
             await ctx.send("{} is already approved!".format(member))
 
@@ -174,7 +170,7 @@ class Moderation(commands.Cog):
                        "".format(ctx.guild.name, ctx.message.author, reason))
             await self.dm(member, msg)
         except errors.Forbidden:
-            await ctx.send("💢 I dont have permission to do this.")
+            await ctx.send(":anger: I dont have permission to do this.")
 
     @commands.has_permissions(manage_roles=True)
     @commands.command()
@@ -202,7 +198,7 @@ class Moderation(commands.Cog):
             msg = "You have been unmuted in {}.".format(ctx.guild.name)
             await self.dm(member, msg)
         except errors.Forbidden:
-            await ctx.send("💢 I dont have permission to do this.")
+            await ctx.send(":anger: I dont have permission to do this.")
 
 
 def setup(bot):
