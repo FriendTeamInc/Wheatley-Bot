@@ -11,6 +11,7 @@ class Streams(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.streams = {
+            "any_role":  self.bot.anystream_role,
             "apex_role":  self.bot.apexstream_role,
             "kigu_role":  self.bot.kigustream_role,
             "juici_role": self.bot.juicistream_role,
@@ -18,7 +19,7 @@ class Streams(commands.Cog):
         }
 
     async def change(self, ctx, stream, lang, cur_stream, user):
-        if not cur_stream:
+        if stream not in cur_stream:
             await user.add_roles(stream)
             await ctx.send("{} {} role {} added."
                            "".format(user.mention, lang, stream.name))
@@ -43,13 +44,9 @@ class Streams(commands.Cog):
         for stream in self.streams:
             if self.streams[stream] in user.roles:
                 applied_streams.append(self.streams[stream])
-        if applied_streams:
-            cur_stream = applied_streams[0]
-        else:
-            cur_stream = None
 
         if streamrole in self.streams:
-            await self.change(ctx, self.streams[streamrole], lang, cur_stream, user)
+            await self.change(ctx, self.streams[streamrole], lang, applied_streams, user)
         else:
             await ctx.send("{} `{}` is not a permissible {}."
                            "".format(user.mention, streamstring, lang))

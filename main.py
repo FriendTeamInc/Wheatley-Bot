@@ -37,6 +37,7 @@ async def on_ready():
         bot.blue_role   = get(guild.roles, name="Blue")
 
         # Stream roles
+        bot.anystream_role  = get(guild.roles, name="AnyStream")
         bot.apexstream_role  = get(guild.roles, name="ApexStream")
         bot.kigustream_role  = get(guild.roles, name="KiguStream")
         bot.juicistream_role = get(guild.roles, name="JuiciStream")
