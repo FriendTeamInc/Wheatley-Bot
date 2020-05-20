@@ -36,6 +36,12 @@ async def on_ready():
         bot.pink_role   = get(guild.roles, name="Pink")
         bot.blue_role   = get(guild.roles, name="Blue")
 
+        # Stream roles
+        bot.apexstream_role  = get(guild.roles, name="ApexStream")
+        bot.kigustream_role  = get(guild.roles, name="KiguStream")
+        bot.juicistream_role = get(guild.roles, name="JuiciStream")
+        bot.percystream_role = get(guild.roles, name="PercyStream")
+
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")
         bot.botdms_channel = get(guild.channels, name="bot-dm")
@@ -48,6 +54,7 @@ async def on_ready():
         "general",
         "colors",
         "moderation",
+        "stream",
         "system",
     ]
 

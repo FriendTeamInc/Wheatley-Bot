@@ -1,0 +1,68 @@
+# Modified from colors.py
+
+from discord.ext import commands
+
+
+class Streams(commands.Cog):
+    """
+    Color commands
+    """
+
+    def __init__(self, bot):
+        self.bot = bot
+        self.streams = {
+            "apex_role":  self.bot.apexstream_role,
+            "kigu_role":  self.bot.kigustream_role,
+            "juici_role": self.bot.juicistream_role,
+            "percy_role": self.bot.percystream_role,
+        }
+
+    async def change(self, ctx, stream, lang, cur_stream, user):
+        if not cur_stream:
+            await user.add_roles(stream)
+            await ctx.send("{} {} {} added."
+                           "".format(user.mention, lang, stream.name.lower()))
+        else:
+            await user.remove_roles(stream)
+            await ctx.send("{} {} {} removed."
+                           "".format(user.mention, lang, stream.name.lower()))
+
+    @commands.command(pass_context=True, aliases=['stream'])
+    async def streamer(self, ctx, streamstring=""):
+        """Choose your streamed role."""
+        user = ctx.message.author
+        lang = (ctx.invoked_with).capitalize()
+        if not streamstring:
+            await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"
+                           "".format(user.mention, lang.lower(), lang.lower()))
+            return
+
+        streamrole = streamstring.lower() + "_role"
+
+        applied_streams = []
+        for stream in self.streams:
+            if self.streams[stream] in user.roles:
+                applied_streams.append(self.streams[stream])
+        if applied_streams:
+            cur_stream = applied_streams[0]
+        else:
+            cur_stream = None
+
+        if streamrole in self.streams:
+            await self.change(ctx, self.streams[streamrole], lang, cur_stream, user)
+        else:
+            await ctx.send("{} `{}` is not a permissible {}."
+                           "".format(user.mention, streamstring, lang))
+
+    @commands.command(pass_context=True, aliases=['liststreams', 'liststreamer', 'liststream'])
+    async def liststreamers(self, ctx):
+        """List available streams"""
+        streamlist = ""
+        for stream in self.streams:
+            stream = stream.split("_")[0]
+            streamlist += "- " + stream + "\n"
+        await ctx.send(":art: **__Colored roles:__**\n" + streamlist)
+
+
+def setup(bot):
+    bot.add_cog(Streams(bot))
