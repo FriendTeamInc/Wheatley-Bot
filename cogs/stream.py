@@ -20,12 +20,12 @@ class Streams(commands.Cog):
     async def change(self, ctx, stream, lang, cur_stream, user):
         if not cur_stream:
             await user.add_roles(stream)
-            await ctx.send("{} {} {} added."
-                           "".format(user.mention, lang, stream.name.lower()))
+            await ctx.send("{} {} role {} added."
+                           "".format(user.mention, lang, stream.name))
         else:
             await user.remove_roles(stream)
-            await ctx.send("{} {} {} removed."
-                           "".format(user.mention, lang, stream.name.lower()))
+            await ctx.send("{} {} role {} removed."
+                           "".format(user.mention, lang, stream.name))
 
     @commands.command(pass_context=True, aliases=['stream'])
     async def streamer(self, ctx, streamstring=""):
