@@ -47,11 +47,11 @@ class Streams(commands.Cog):
             for stream in self.streams:
                 if self.streams[stream] in user.roles:
                     toggle = "disabled"
-                    await user.remove_roles(stream)
+                    await user.remove_roles(self.streams[stream])
             
             if toggle is "enabled":
                 for stream in self.streams:
-                    await user.add_roles(stream)
+                    await user.add_roles(self.streams[stream])
             
             await ctx.send("{} now has all stream notifs {}."
                            "".format(user.mention, toggle))
