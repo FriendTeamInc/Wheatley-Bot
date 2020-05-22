@@ -40,7 +40,7 @@ class Streams(commands.Cog):
             
         streamrole = streamstring.lower()
         
-        if streamstring is "all":
+        if streamstring is "all" or streamstring is "any":
             toggle = "enabled"
             
             # First check for any roles already had
