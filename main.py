@@ -47,7 +47,7 @@ async def on_ready():
         bot.botdev_channel = get(guild.channels, name="bot-dev")
         bot.botdms_channel = get(guild.channels, name="bot-dm")
         bot.logs_channel   = get(guild.channels, name="bot-logs")
-        bot.memberlogs_channel = get(guild.channels, name="member-logs")
+        bot.memberlogs_channel = get(guild.channels, name="user-logs")
 
 
     # Load addons
@@ -85,6 +85,7 @@ async def on_ready():
 
     print("Client logged in as {}, in the following guild : {}"
           "".format(bot.user.name, bot.guild.name))
+    await bot.botdev_channel.send("Back online!")
 
 
 @bot.event
