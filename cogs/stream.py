@@ -38,7 +38,7 @@ class Streams(commands.Cog):
                            "".format(user.mention, lang.lower(), lang.lower()))
             return
             
-        streamrole = streamstring.lower()
+        streamstring = streamstring.lower()
         
         if streamstring is "all" or streamstring is "any":
             toggle = "enabled"
@@ -47,7 +47,7 @@ class Streams(commands.Cog):
             for stream in self.streams:
                 if self.streams[stream] in user.roles:
                     toggle = "disabled"
-                    
+                    await user.remove_roles(stream)
             
             if toggle is "enabled":
                 for stream in self.streams:
@@ -57,7 +57,7 @@ class Streams(commands.Cog):
                            "".format(user.mention, toggle))
             return
 
-        streamrole += "_role"
+        streamrole = streamstring + "_role"
 
         applied_streams = []
         for stream in self.streams:
