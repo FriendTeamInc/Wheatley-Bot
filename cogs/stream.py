@@ -11,7 +11,7 @@ class Streams(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.streams = {
-            "any_role":  self.bot.anystream_role,
+            #"any_role":  self.bot.anystream_role,
             "apex_role":  self.bot.apexstream_role,
             "kigu_role":  self.bot.kigustream_role,
             "juici_role": self.bot.juicistream_role,
@@ -37,8 +37,27 @@ class Streams(commands.Cog):
             await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"
                            "".format(user.mention, lang.lower(), lang.lower()))
             return
+            
+        streamrole = streamstring.lower()
+        
+        if streamstring is "all":
+            toggle = "enabled"
+            
+            # First check for any roles already had
+            for stream in self.streams:
+                if self.streams[stream] in user.roles:
+                    toggle = "disabled"
+                    
+            
+            if toggle is "enabled":
+                for stream in self.streams:
+                    await user.add_roles(stream)
+            
+            await ctx.send("{} now has all stream notifs {}."
+                           "".format(user.mention, toggle))
+            return
 
-        streamrole = streamstring.lower() + "_role"
+        streamrole += "_role"
 
         applied_streams = []
         for stream in self.streams:
@@ -58,6 +77,7 @@ class Streams(commands.Cog):
         for stream in self.streams:
             stream = stream.split("_")[0].title()
             streamlist += "- " + stream + "\n"
+        streamlist = "- All\n" + streamlist
         await ctx.send(":tv: **__Streamer Notif roles:__**\n" + streamlist)
 
 
