@@ -36,8 +36,8 @@ class System(commands.Cog):
     @commands.has_role("BotDev")
     @commands.command(aliases=["update"])
     async def upgrade(self, ctx):
-        self.botupdate(ctx)
-        self.botstop(ctx)
+        await self.botupdate(ctx)
+        await self.botstop(ctx)
 
 
 def setup(bot):
