@@ -31,6 +31,13 @@ class System(commands.Cog):
     async def botstop(self, ctx):
         await ctx.send("Exiting, should restart soon.")
         exit(0)
+    
+    # Is this safe? probably not lol
+    @commands.has_role("BotDev")
+    @commands.command(aliases=["update"])
+    async def upgrade(self, ctx):
+        self.botupdate(ctx)
+        self.botstop(ctx)
 
 
 def setup(bot):
