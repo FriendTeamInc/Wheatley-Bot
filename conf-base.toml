@@ -1,0 +1,35 @@
+# The default config, edit and save as conf.toml
+
+# Any discord related config, you really only need your token here.
+[discord]
+token = "discord.token.right-here"
+
+# Color roles that users can give themselves.
+# key is what they type in to get the role with .color,
+# string is the name of the role itself
+[colors]
+white  = "White"
+turq   = "Turquoise"
+green  = "Green"
+sky    = "Sky"
+purple = "purple"
+red    = "Red"
+orange = "Orange"
+yellow = "Yellow"
+dark   = "Dark"
+pink   = "Pink"
+blue   = "Blue"
+
+# Roles for stream notifications.
+# same rules as color, key is what the user uses, key is the role name
+[streams]
+apex  = "ApexStream"  # https://www.twitch.tv/notquiteapex
+kigu  = "KiguStream"  # https://www.twitch.tv/batkigu
+juici = "JuiciStream" # https://www.twitch.tv/juicibit
+percy = "PercyStream" # https://www.twitch.tv/percy_creates
+
+# channel names for some debugging stuff, not needed but they help with issues.
+[dev]
+botdev = "bot-dev"
+botdms = "bot-dms"
+botlog = "bot-logs"

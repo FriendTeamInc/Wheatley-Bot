@@ -1,5 +1,5 @@
 # Config file
-conf.json
+conf.toml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

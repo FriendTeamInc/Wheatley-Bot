@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from os import getenv
-from json import load
 from traceback import format_exception
 from asyncio import sleep
 
@@ -9,12 +8,17 @@ from discord import errors, Embed, Color
 from discord.ext import commands
 from discord.utils import get
 
+import toml
+
+
 bot = commands.Bot(command_prefix='.')
-conf = load(open("conf.json"))
+conf = toml.load("conf.toml")
 
 @bot.event
 async def on_ready():
     for guild in bot.guilds:
+        # This bot is only meant to manage one server.
+        # Do not invite your bot to more than one server.
         bot.guild = guild
 
         # Friends
@@ -37,7 +41,6 @@ async def on_ready():
         bot.blue_role   = get(guild.roles, name="Blue")
 
         # Stream roles
-        bot.anystream_role  = get(guild.roles, name="AnyStream")
         bot.apexstream_role  = get(guild.roles, name="ApexStream")
         bot.kigustream_role  = get(guild.roles, name="KiguStream")
         bot.juicistream_role = get(guild.roles, name="JuiciStream")
@@ -47,7 +50,6 @@ async def on_ready():
         bot.botdev_channel = get(guild.channels, name="bot-dev")
         bot.botdms_channel = get(guild.channels, name="bot-dm")
         bot.logs_channel   = get(guild.channels, name="bot-logs")
-        bot.memberlogs_channel = get(guild.channels, name="user-logs")
 
 
     # Load addons
@@ -126,4 +128,4 @@ async def on_command_error(ctx, error):
 
 # Run the bot
 if __name__ == "__main__":
-    bot.run(conf["token"])
+    bot.run(conf["discord"]["token"])

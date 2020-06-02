@@ -5,8 +5,6 @@ from sys import exit
 
 from discord.ext import commands
 
-__admin_role__ = None
-
 class System(commands.Cog):
     """
     Bot management commands, for use by staff only
@@ -14,7 +12,6 @@ class System(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        __admin_role__ = self.bot.admin_role
 
     @commands.has_role("BotDev")
     @commands.command(aliases=["pull"])
