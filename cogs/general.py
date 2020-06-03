@@ -13,7 +13,8 @@ class General(commands.Cog):
 
     @commands.command(aliases=['source'])
     async def about(self, ctx):
-        await ctx.send("You can view my source code here:"
+        """Links to source code on GitHub."""
+        await ctx.send("You can view my source code here: "
             "https://github.com/NotQuiteApex/Wheatley-Bot")
 
 

@@ -17,6 +17,11 @@ class Moderation(commands.Cog):
         except:
             pass
 
+    async def noperms(self, ctx):
+        """No perms!"""
+        await ctx.send(":anger: I dont have permission to do this.")
+
+
     @commands.has_permissions(kick_members=True)
     @commands.command(aliases=['dropkick','punt'])
     async def kick(self, ctx, member: Member=None, *, reason: str=""):
@@ -33,9 +38,9 @@ class Moderation(commands.Cog):
                 await ctx.send("You may not kick another staffer")
                 return
             elif ctx.me is member:
-                await ctx.send("I am unable to kick myself to prevent stupid mistakes.\n"
-                               "Please kick me by hand!")
+                await ctx.send("Kick me yourself!")
                 return
+
             dm_msg = ""
             if reason == "":
                 dm_msg = "You have been kicked from {}.".format(ctx.guild.name)
@@ -46,7 +51,7 @@ class Moderation(commands.Cog):
             await member.kick()
             await ctx.send("I've kicked {}.".format(member))
         except errors.Forbidden:
-            await ctx.send(":anger: I dont have permission to do this.")
+            await self.noperms(ctx)
 
     @commands.has_permissions(ban_members=True)
     @commands.command()
@@ -68,6 +73,7 @@ class Moderation(commands.Cog):
             return
         else:
             try:
+                dm_msg = ""
                 if not reason:
                     dm_msg = "You have been banned from {}.".format(
                         ctx.guild.name)
@@ -78,7 +84,7 @@ class Moderation(commands.Cog):
                 await member.ban(delete_message_days=0)
                 await ctx.send("I've banned {}.".format(member))
             except errors.Forbidden:
-                await ctx.send(":anger: I dont have permission to do this.")
+                await self.noperms(ctx)
 
     @commands.has_permissions(ban_members=True)
     @commands.command()
@@ -94,7 +100,7 @@ class Moderation(commands.Cog):
             await ctx.guild.ban(member)
             await ctx.send("I've banned ID: {}.".format(uid))
         except errors.Forbidden:
-            await ctx.send(":anger: I dont have permission to do this.")
+            await self.noperms(ctx)
 
     @commands.has_permissions(manage_messages=True)
     @commands.command()
@@ -114,92 +120,6 @@ class Moderation(commands.Cog):
         channel = ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=True)
         await channel.send(":unlock: Channel Unlocked")
-
-    # WARN STUFF moved to warn.py
-
-    @commands.has_permissions(manage_roles=True)
-    @commands.command()
-    async def approve(self, ctx, member: Member):
-        """Approve members."""
-        try:
-            member = ctx.message.mentions[0]
-        except IndexError:
-            await ctx.send("Please mention a user.")
-            return
-        if self.bot.approved_role not in member.roles:
-            try:
-                await member.add_roles(self.bot.approved_role)
-                dm_msg = "You have been approved. Welcome to {}!".format(
-                    ctx.guild.name)
-                await self.dm(member, dm_msg)
-                await ctx.send(":thumbsup: {} has been approved".format(member))
-            except errors.Forbidden:
-                await ctx.send(":anger: I dont have permission to do this.")
-        elif self.bot.approved_role in member.roles:
-            await ctx.send("{} is already approved!".format(member))
-
-    @commands.has_permissions(manage_roles=True)
-    @commands.command()
-    async def mute(self, ctx, member: Member, *, reason=""):
-        """Mutes a user. (Staff Only)"""
-
-        if member is ctx.message.author:
-            await ctx.send("You cannot mute yourself!")
-            return
-        elif (self.bot.staff_role in member.roles and
-              self.bot.owner_role not in ctx.message.author.roles):
-            await ctx.send("You cannot mute other staffers!")
-            return
-        elif self.bot.muted_role in member.roles:
-            await ctx.send("{} is already muted!".format(member))
-            return
-        elif ctx.me is member:
-            await ctx.send("I can not mute myself!")
-            return
-
-        try:
-            await member.add_roles(self.bot.muted_role)
-            await ctx.send("{} can no longer speak!".format(member))
-            if not reason:
-                msg = ("You have been muted in {} by {}. You will be DM'ed when a mod unmutes you."
-                       "\n**Do not ask mods to unmute you, as doing so might extend the duration "
-                       "of the mute**".format(ctx.guild.name, ctx.message.author))
-            else:
-                msg = ("You have been muted in {} by {}. The given reason is {}. You will be DM'ed"
-                       " when a mod unmutes you.\n**Do not ask mods to unmute you, as doing so "
-                       "might extend the duration of the mute**"
-                       "".format(ctx.guild.name, ctx.message.author, reason))
-            await self.dm(member, msg)
-        except errors.Forbidden:
-            await ctx.send(":anger: I dont have permission to do this.")
-
-    @commands.has_permissions(manage_roles=True)
-    @commands.command()
-    async def unmute(self, ctx, member: Member):
-        """Unmutes a user. (Staff Only)"""
-
-        if (self.bot.staff_role in member.roles and
-                self.bot.owner_role not in ctx.message.author.roles):
-            await ctx.send("You cannot unmute other staffers!")
-            return
-        elif ctx.me is member:
-            await ctx.send("I can not unmute myself!")
-            return
-
-        try:
-            if self.bot.muted_role not in member.roles:
-                await ctx.send("{} is not muted!".format(member))
-                return
-            elif member == ctx.message.author:
-                await ctx.send("You cannot unmute yourself! "
-                               "How did you even manage to send this if you are muted?")
-                return
-            await member.remove_roles(self.bot.muted_role)
-            await ctx.send("{} is no longer muted!".format(member))
-            msg = "You have been unmuted in {}.".format(ctx.guild.name)
-            await self.dm(member, msg)
-        except errors.Forbidden:
-            await ctx.send(":anger: I dont have permission to do this.")
 
 
 def setup(bot):
