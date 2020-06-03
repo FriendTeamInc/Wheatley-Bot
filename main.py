@@ -22,7 +22,12 @@ except FileNotFoundError:
 async def on_ready():
     bot.conf = conf
 
-    roleerr = []
+    roleerr = {
+        "color": {"role":[],"key":[]},
+        "stream": {"role":[],"key":[]},
+        "pronouns": {"role":[],"key":[]}
+    }
+    hasroleerr = False
     
     for guild in bot.guilds:
         # This bot is only meant to manage one server.
@@ -41,7 +46,9 @@ async def on_ready():
         for color, role in colors.items():
             bot.colors[color.lower()] = get(guild.roles, name=role)
             if bot.colors[color.lower()] is None:
-                roleerr.append(f"Missing role {role} for `color` {color}.")
+                roleerr["color"]["key"].append(color)
+                roleerr["color"]["role"].append(role)
+                hasroleerr = True
 
         # Stream roles
         bot.streams = {}
@@ -49,7 +56,9 @@ async def on_ready():
         for stream, role in streams.items():
             bot.streams[stream.lower()] = get(guild.roles, name=role)
             if bot.streams[stream.lower()] is None:
-                roleerr.append(f"Missing role {role} for `stream` {stream}.")
+                roleerr["stream"]["key"].append(stream)
+                roleerr["stream"]["role"].append(role)
+                hasroleerr = True
 
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")
@@ -89,16 +98,16 @@ async def on_ready():
             pass
 
     # Notify if any roles are missing.
-    if len(roleerr) > 0:
-        for err in roleerr:
-            print(err)
-            await bot.botdev_channel.send(err)
-        await bot.botdev_channel.send("Patch these roles dingus!")
-
+    if hasroleerr:
+        for roletype, v in roleerr:
+            emb = Embed(title=f"Missing `{roletype}` roles", color=Color.orange())
+            emb.add_field(name="Key", value=v["key"].join("\n"), inline=True)
+            emb.add_field(name="Role", value=v["role"].join("\n"), inline=True)
+            await bot.logs_channel.send("", embed=emb)
+        await bot.logs_channel.send("Patch these roles in your conf.toml dingus!")
 
     # We're in.
-    print("Client logged in as {}, in the following guild : {}"
-          "".format(bot.user.name, bot.guild.name))
+    print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")
     await bot.botdev_channel.send("Back online!")
 
 
