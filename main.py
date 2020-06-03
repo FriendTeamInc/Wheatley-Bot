@@ -100,6 +100,8 @@ async def on_ready():
     # Notify if any roles are missing.
     if hasroleerr:
         for roletype, v in roleerr.items():
+            if len(v["key"]) == 0:
+                continue # Skip empty roleerr partitions!
             emb = Embed(title=f"Missing `{roletype}` roles", color=Color.orange())
             emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
             emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
