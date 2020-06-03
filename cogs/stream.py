@@ -1,6 +1,8 @@
 # Modified from colors.py
 
+from discord import errors
 from discord.ext import commands
+from discord.utils import get
 
 
 class Streams(commands.Cog):
@@ -81,7 +83,7 @@ class Streams(commands.Cog):
             await self.guild.create_role(name=streamstring)
             self.streams[streamer] = get(self.guild.roles, name=streamstring)
             await ctx.send("Added stream for {} as {}".format(streamer, streamstring))
-        except discord.Forbidden:
+        except errors.Forbidden:
             await ctx.send("I don't have perms to do that!")
         
     @commands.has_permissions(manage_roles=True)
@@ -92,7 +94,7 @@ class Streams(commands.Cog):
             try:
                 await self.streams[streamer].delete()
                 del self.streams[streamer]
-            except discord.Forbidden:
+            except errors.Forbidden:
                 await ctx.send("I don't have perms to do that!")
         else:
             await ctx.send("That stream doesn't exist!")
