@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from sys import exit
 from os import getenv
 from traceback import format_exception
 from asyncio import sleep
@@ -12,7 +13,10 @@ import toml
 
 
 bot = commands.Bot(command_prefix='.')
-conf = toml.load("conf.toml")
+try:
+    conf = toml.load("conf.toml")
+except FileNotFoundError:
+    exit("Config not found!")
 
 @bot.event
 async def on_ready():
