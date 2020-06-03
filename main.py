@@ -92,8 +92,8 @@ async def on_ready():
     if len(roleerr) > 0:
         for err in roleerr:
             print(err)
-            bot.botdev_channel.send(err)
-        bot.botdev_channel.send("Patch these roles dingus!")
+            await bot.botdev_channel.send(err)
+        await bot.botdev_channel.send("Patch these roles dingus!")
 
 
     # We're in.
