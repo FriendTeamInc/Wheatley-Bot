@@ -21,6 +21,8 @@ except FileNotFoundError:
 @bot.event
 async def on_ready():
     bot.conf = conf
+
+    roleerr = []
     
     for guild in bot.guilds:
         # This bot is only meant to manage one server.
@@ -37,13 +39,17 @@ async def on_ready():
         bot.colors = {}
         colors = conf["roles"]["colors"]
         for color, role in colors.items():
-            bot.colors[color.lower()] = get(guild.roles, name=role)
+            if not (bot.colors[color.lower()] := get(guild.roles, name=role)):
+                roleerr += [f"Missing role {role} for `color` {color}."]
+                pass
 
         # Stream roles
         bot.streams = {}
         streams = conf["roles"]["streams"]
         for stream, role in streams.items():
-            bot.streams[stream.lower()] = get(guild.roles, name=role)
+            if not (bot.streams[stream.lower()] := get(guild.roles, name=role)):
+                roleerr += [f"Missing role {role} for `stream` {stream}."]
+                pass
 
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")
@@ -82,8 +88,15 @@ async def on_ready():
         except errors.Forbidden:
             pass
 
-    bot.all_ready = True
+    # Notify if any roles are missing.
+    if len(roleerr) > 0:
+        for err in roleerr:
+            print(err)
+            bot.botdev_channel.send(err)
+        bot.botdev_channel.send("Patch these roles dingus!")
 
+
+    # We're in.
     print("Client logged in as {}, in the following guild : {}"
           "".format(bot.user.name, bot.guild.name))
     await bot.botdev_channel.send("Back online!")
