@@ -47,8 +47,9 @@ class System(commands.Cog):
         for stream, role in self.bot.streams.items():
             tom["roles"]["streams"][stream] = role.name
             
-        await ctx.send("```toml\n{}```".format(toml.dumps(tom))
+        await ctx.send("```toml\n{}```".format(toml.dumps(tom)))
 
 
 def setup(bot):
     bot.add_cog(System(bot))
+    
