@@ -101,8 +101,8 @@ async def on_ready():
     if hasroleerr:
         for roletype, v in roleerr.items():
             emb = Embed(title=f"Missing `{roletype}` roles", color=Color.orange())
-            emb.add_field(name="Key", value=v["key"].join("\n"), inline=True)
-            emb.add_field(name="Role", value=v["role"].join("\n"), inline=True)
+            emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
+            emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
             await bot.logs_channel.send("", embed=emb)
         await bot.logs_channel.send("Patch these roles in your conf.toml dingus!")
 
