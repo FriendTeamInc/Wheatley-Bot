@@ -25,6 +25,7 @@ class System(commands.Cog):
 
         await ctx.send("Changes pulled.")
 
+    # Bot is meant to run under systemctl to auto-restart it.
     @commands.has_role("BotDev")
     @commands.command(aliases=["stop","restart"])
     async def botstop(self, ctx):
