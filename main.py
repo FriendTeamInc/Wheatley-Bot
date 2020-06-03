@@ -99,7 +99,7 @@ async def on_ready():
 
     # Notify if any roles are missing.
     if hasroleerr:
-        for roletype, v in roleerr:
+        for roletype, v in roleerr.items():
             emb = Embed(title=f"Missing `{roletype}` roles", color=Color.orange())
             emb.add_field(name="Key", value=v["key"].join("\n"), inline=True)
             emb.add_field(name="Role", value=v["role"].join("\n"), inline=True)
