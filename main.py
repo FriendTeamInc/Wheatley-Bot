@@ -39,17 +39,17 @@ async def on_ready():
         bot.colors = {}
         colors = conf["roles"]["colors"]
         for color, role in colors.items():
-            if not (bot.colors[color.lower()] := get(guild.roles, name=role)):
+            bot.colors[color.lower()] = get(guild.roles, name=role)
+            if not bot.colors[color.lower()]:
                 roleerr += [f"Missing role {role} for `color` {color}."]
-                pass
 
         # Stream roles
         bot.streams = {}
         streams = conf["roles"]["streams"]
         for stream, role in streams.items():
-            if not (bot.streams[stream.lower()] := get(guild.roles, name=role)):
+            bot.streams[stream.lower()] = get(guild.roles, name=role)
+            if not bot.streams[stream.lower()]:
                 roleerr += [f"Missing role {role} for `stream` {stream}."]
-                pass
 
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")
