@@ -41,7 +41,13 @@ class System(commands.Cog):
     @commands.has_role("BotDev")
     @commands.command()
     async def dumpconf(self, ctx):
-        await ctx.send("```toml\n{}\n{}\n```".format(toml.dumps(self.bot.colors), toml.dumps(self.bot.streams)))
+        tom = {"roles":{"colors":{},"streams":{}}}
+        for color, role in self.bot.colors.items():
+            tom["roles"]["colors"][color] = role.name
+        for stream, role in self.bot.streams.items():
+            tom["roles"]["streams"][stream] = role.name
+            
+        await ctx.send("```toml\n{}```".format(toml.dumps(tom))
 
 
 def setup(bot):

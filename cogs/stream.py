@@ -70,7 +70,7 @@ class Streams(commands.Cog):
         """List available streams to be notified of."""
         streamlist = ""
         for stream in self.streams:
-            stream = stream.split("_")[0].title()
+            stream = stream.title()
             streamlist += "- " + stream + "\n"
         streamlist = "- All\n" + streamlist
         await ctx.send(":tv: **__Streamer Notif roles:__**\n" + streamlist)
@@ -79,6 +79,13 @@ class Streams(commands.Cog):
     @commands.command(aliases=['addstreamer'])
     async def addstream(self, ctx, streamer="", streamstring=""):
         streamer = streamer.lower()
+        if len(streamer) < 1 or len(streamstring) < 1:
+            if len(streamer) < 1:
+                await ctx.send("The streamer's name must be longer!")
+            elif len(streamstring) < 1:
+                await ctx.send("The stream role name must be longer!")
+            return
+        
         try:
             await self.guild.create_role(name=streamstring)
             self.streams[streamer] = get(self.guild.roles, name=streamstring)
@@ -93,6 +100,7 @@ class Streams(commands.Cog):
         if streamer in self.streams:
             try:
                 await self.streams[streamer].delete()
+                await ctx.send("Deleted stream `{}`.".format(streamer))
                 del self.streams[streamer]
             except errors.Forbidden:
                 await ctx.send("I don't have perms to do that!")
