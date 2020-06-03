@@ -36,6 +36,7 @@ class Moderation(commands.Cog):
                 await ctx.send("I am unable to kick myself to prevent stupid mistakes.\n"
                                "Please kick me by hand!")
                 return
+            dm_msg = ""
             if reason == "":
                 dm_msg = "You have been kicked from {}.".format(ctx.guild.name)
             else:

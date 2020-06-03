@@ -16,6 +16,8 @@ conf = toml.load("conf.toml")
 
 @bot.event
 async def on_ready():
+    bot.conf = conf
+    
     for guild in bot.guilds:
         # This bot is only meant to manage one server.
         # Do not invite your bot to more than one server.
@@ -28,23 +30,16 @@ async def on_ready():
         bot.owner_role  = get(guild.roles, name="Admin")
 
         # Color roles
-        bot.white_role  = get(guild.roles, name="White")
-        bot.turq_role   = get(guild.roles, name="Turquoise")
-        bot.green_role  = get(guild.roles, name="Green")
-        bot.sky_role    = get(guild.roles, name="Sky")
-        bot.purple_role = get(guild.roles, name="Purple")
-        bot.red_role    = get(guild.roles, name="Red")
-        bot.orange_role = get(guild.roles, name="Orange")
-        bot.yellow_role = get(guild.roles, name="Yellow")
-        bot.dark_role   = get(guild.roles, name="DarkGrey")
-        bot.pink_role   = get(guild.roles, name="Pink")
-        bot.blue_role   = get(guild.roles, name="Blue")
+        bot.colors = {}
+        colors = conf["roles"]["colors"]
+        for color, role in colors.items():
+            bot.colors[color.lower()] = get(guild.roles, name=role)
 
         # Stream roles
-        bot.apexstream_role  = get(guild.roles, name="ApexStream")
-        bot.kigustream_role  = get(guild.roles, name="KiguStream")
-        bot.juicistream_role = get(guild.roles, name="JuiciStream")
-        bot.percystream_role = get(guild.roles, name="PercyStream")
+        bot.streams = {}
+        streams = conf["roles"]["streams"]
+        for stream, role in streams.items():
+            bot.streams[stream.lower()] = get(guild.roles, name=role)
 
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")

@@ -4,29 +4,37 @@
 [discord]
 token = "discord.token.right-here"
 
-# Color roles that users can give themselves.
-# key is what they type in to get the role with .color,
-# string is the name of the role itself
-[colors]
-white  = "White"
-turq   = "Turquoise"
-green  = "Green"
-sky    = "Sky"
-purple = "purple"
-red    = "Red"
-orange = "Orange"
-yellow = "Yellow"
-dark   = "Dark"
-pink   = "Pink"
-blue   = "Blue"
+# Roles for everything, like colors, stream notifs, etc.
+# key is what they type in to get the role with a command,
+# string is the name of the role itself in Discord.
+[roles]
+	# Staff roles, in case you have different names for other levels of staff.
+	[roles.staff]
+	admin = "Admin"
+	moderator = "Mod"
+	member = "Friend"
 
-# Roles for stream notifications.
-# same rules as color, key is what the user uses, key is the role name
-[streams]
-apex  = "ApexStream"  # https://www.twitch.tv/notquiteapex
-kigu  = "KiguStream"  # https://www.twitch.tv/batkigu
-juici = "JuiciStream" # https://www.twitch.tv/juicibit
-percy = "PercyStream" # https://www.twitch.tv/percy_creates
+	# Color roles that users can give themselves.
+	[roles.colors]
+	white  = "White"
+	turq   = "Turquoise"
+	green  = "Green"
+	sky    = "Sky"
+	purple = "purple"
+	red    = "Red"
+	orange = "Orange"
+	yellow = "Yellow"
+	dark   = "Dark"
+	pink   = "Pink"
+	blue   = "Blue"
+
+	# Roles for stream notifications. Not case sensitive
+	[roles.streams]
+	apex    = "ApexStream"  # https://www.twitch.tv/notquiteapex
+	kigu    = "KiguStream"  # https://www.twitch.tv/batkigu
+	juici   = "JuiciStream" # https://www.twitch.tv/juicibit
+	percy   = "PercyStream" # https://www.twitch.tv/percy_creates
+	alchana = "AlchanaStream" # https://www.twitch.tv/alkana
 
 # channel names for some debugging stuff, not needed but they help with issues.
 [dev]

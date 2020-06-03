@@ -5,6 +5,8 @@ from sys import exit
 
 from discord.ext import commands
 
+import toml
+
 class System(commands.Cog):
     """
     Bot management commands, for use by staff only
@@ -35,6 +37,11 @@ class System(commands.Cog):
     async def upgrade(self, ctx):
         await self.botupdate(ctx)
         await self.botstop(ctx)
+    
+    @commands.has_role("BotDev")
+    @commands.command()
+    async def dumpconf(self, ctx):
+        await ctx.send("```toml\n{}\n{}\n```".format(toml.dumps(self.bot.colors), toml.dumps(self.bot.streams)))
 
 
 def setup(bot):
