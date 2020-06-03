@@ -61,7 +61,7 @@ async def on_ready():
     ]
 
     # Notify if an addon fails to load.
-    fail = None
+    fail = 0
     for addon in addons:
         try:
             bot.load_extension("cogs." + addon)
@@ -75,7 +75,7 @@ async def on_ready():
                 type(e).__name__, e), inline=True)
             print("Failed to load {} :\n{} : {}".format(
                 addon, type(e).__name__, e))
-    if fail:
+    if fail != 0:
         try:
             logchannel = bot.logs_channel
             await logchannel.send("", embed=emb)
