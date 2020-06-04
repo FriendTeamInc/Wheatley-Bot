@@ -65,6 +65,7 @@ async def on_ready():
         bot.botdms_channel = get(guild.channels, name="bot-dm")
         bot.logs_channel   = get(guild.channels, name="bot-logs")
 
+    await bot.logs_channel.send(".\nComing back online.\n.")
 
     # Load addons
     addons = [
@@ -76,21 +77,18 @@ async def on_ready():
     ]
 
     # Notify if an addon fails to load.
-    fail = 0
+    addonfail = False
     for addon in addons:
         try:
             bot.load_extension("cogs." + addon)
             print("{} cog loaded.".format(addon))
         except Exception as e:
-            if not fail:
-                emb = Embed(
-                    title="Startup", description="Failed to load Cog", colour=Color.blue())
-            fail += 1
-            emb.add_field(name=addon, value="{} : {}".format(
-                type(e).__name__, e), inline=True)
-            print("Failed to load {} :\n{} : {}".format(
-                addon, type(e).__name__, e))
-    if fail != 0:
+            if not addonfail:
+                emb = Embed(title="Startup", description="Failed to load Cog", color=Color.blue())
+            addonfail = True
+            emb.add_field(name=addon, value=f"{type(e).__name__} : {e}", inline=True)
+            print(f"Failed to load {addon} :\n{type(e).__name__} : {e}")
+    if addonfail:
         try:
             logchannel = bot.logs_channel
             await logchannel.send("", embed=emb)
@@ -106,7 +104,7 @@ async def on_ready():
             emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
             emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
             await bot.logs_channel.send("", embed=emb)
-        await bot.logs_channel.send("Patch these roles in your conf.toml dingus!")
+        await bot.logs_channel.send("Patch these roles in your `conf.toml` dingus!")
 
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")

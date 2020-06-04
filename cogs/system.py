@@ -44,11 +44,23 @@ class System(commands.Cog):
     async def dumpconf(self, ctx):
         tom = {"roles":{"colors":{},"streams":{}}}
         for color, role in self.bot.colors.items():
-            tom["roles"]["colors"][color] = role.name
+            if role is not None:
+                tom["roles"]["colors"][color] = role.name
+            else:
+                tom["roles"]["colors"][color] = 0
         for stream, role in self.bot.streams.items():
-            tom["roles"]["streams"][stream] = role.name
+            if role is not None:
+                tom["roles"]["streams"][stream] = role.name
+            else:
+                tom["roles"]["streams"][stream] = 0
             
         await ctx.send("```toml\n{}```".format(toml.dumps(tom)))
+
+    @commands.has_role("BotDev")
+    @commands.command()
+    async def reloadroles(self, ctx):
+        """Does nothing yet."""
+        pass
 
 
 def setup(bot):
