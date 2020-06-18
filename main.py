@@ -96,7 +96,6 @@ async def on_ready():
 
     # Load addons
     bot.addons = [
-        "general",
         "moderation",
         "system",
     ]
@@ -174,6 +173,13 @@ async def on_command_error(ctx, error):
         print(''.join(tb))
         botdev_channel = bot.botdev_channel
         await botdev_channel.send(botdev_msg + '\n```' + ''.join(tb) + '\n```')
+
+
+@bot.command(aliases=['source'])
+async def about(ctx):
+    """Links to source code on GitHub."""
+    await ctx.send("You can view my source code here: "
+        "https://github.com/NotQuiteApex/Wheatley-Bot")
 
 
 # Run the bot
