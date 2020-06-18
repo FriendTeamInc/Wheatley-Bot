@@ -60,7 +60,7 @@ class pronouns(commands.Cog):
         pronounlist = ""
         for pronoun in self.bot.pronouns:
             pronounlist += "- " + pronoun + "\n"
-        await ctx.send(":art: **__pronouned roles:__**\n" + pronounlist)
+        await ctx.send(":crown: **__pronoun roles:__**\n" + pronounlist)
 
 
 def setup(bot):
