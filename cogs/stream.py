@@ -78,6 +78,9 @@ class Streams(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     @commands.command(aliases=['addstreamer'])
     async def addstream(self, ctx, streamer="", streamstring=""):
+        if streamer == "":
+            await ctx.send("Usage: `.addstream <streamer> <streamrole>")
+
         streamer = streamer.lower()
         if len(streamer) < 1 or len(streamstring) < 1:
             if len(streamer) < 1:
@@ -96,6 +99,9 @@ class Streams(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     @commands.command()
     async def rmstream(self, ctx, streamer=""):
+        if streamer == "":
+            await ctx.send("Usage: `.rmstream <streamer>")
+
         streamer = streamer.lower()
         if streamer in self.streams:
             try:
