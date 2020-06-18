@@ -18,16 +18,22 @@ try:
 except FileNotFoundError:
     exit("Config not found!")
 
+
 @bot.event
 async def on_ready():
     bot.conf = conf
 
+    missingroleskey = False
     roleerr = {
         "color": {"role":[],"key":[]},
         "stream": {"role":[],"key":[]},
-        "pronouns": {"role":[],"key":[]}
+        "pronoun": {"role":[],"key":[]}
     }
     hasroleerr = False
+
+    hascolorroles = False
+    hasstreamroles = False
+    haspronounroles = False
     
     for guild in bot.guilds:
         # This bot is only meant to manage one server.
@@ -35,57 +41,76 @@ async def on_ready():
         bot.guild = guild
 
         # Friends
+        # Will be changed later to different roles to make it more server-agnostic
         bot.admin_role  = get(guild.roles, name="Admin")
         bot.friend_role = get(guild.roles, name="Friend")
         bot.staff_role  = get(guild.roles, name="Admin")
         bot.owner_role  = get(guild.roles, name="Admin")
-
-        # Color roles
-        bot.colors = {}
-        colors = conf["roles"]["colors"]
-        for color, role in colors.items():
-            bot.colors[color.lower()] = get(guild.roles, name=role)
-            if bot.colors[color.lower()] is None:
-                roleerr["color"]["key"].append(color)
-                roleerr["color"]["role"].append(role)
-                hasroleerr = True
-
-        # Stream roles
-        bot.streams = {}
-        streams = conf["roles"]["streams"]
-        for stream, role in streams.items():
-            bot.streams[stream.lower()] = get(guild.roles, name=role)
-            if bot.streams[stream.lower()] is None:
-                roleerr["stream"]["key"].append(stream)
-                roleerr["stream"]["role"].append(role)
-                hasroleerr = True
-
-        # Pronoun roles
-        bot.pronouns = {}
-        pronouns = conf["roles"]["pronouns"]
-        for pronoun, role in pronouns.items():
-            bot.pronouns[pronoun.lower()] = get(guild.roles, name=role)
-            if bot.pronouns[pronoun.lower()] is None:
-                roleerr["pronoun"]["key"].append(pronoun)
-                roleerr["pronoun"]["role"].append(role)
-                hasroleerr = True
 
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")
         bot.botdms_channel = get(guild.channels, name="bot-dm")
         bot.logs_channel   = get(guild.channels, name="bot-logs")
 
-    await bot.logs_channel.send(".\nComing back online.\n.")
+        if conf["roles"] == None:
+            missingroleskey = True
+            break
+
+        # Color roles
+        if conf["roles"]["colors"] != None:
+            hascolorroles = True
+            bot.colors = {}
+            colors = conf["roles"]["colors"]
+            for color, role in colors.items():
+                bot.colors[color.lower()] = get(guild.roles, name=role)
+                if bot.colors[color.lower()] is None:
+                    roleerr["color"]["key"].append(color)
+                    roleerr["color"]["role"].append(role)
+                    hasroleerr = True
+
+        # Stream roles
+        if conf["roles"]["streams"] != None:
+            hasstreamroles = True
+            bot.streams = {}
+            streams = conf["roles"]["streams"]
+            for stream, role in streams.items():
+                bot.streams[stream.lower()] = get(guild.roles, name=role)
+                if bot.streams[stream.lower()] is None:
+                    roleerr["stream"]["key"].append(stream)
+                    roleerr["stream"]["role"].append(role)
+                    hasroleerr = True
+
+        # Pronoun roles
+        if conf["roles"]["pronouns"] != None:
+            haspronounroles = True
+            bot.pronouns = {}
+            pronouns = conf["roles"]["pronouns"]
+            for pronoun, role in pronouns.items():
+                bot.pronouns[pronoun.lower()] = get(guild.roles, name=role)
+                if bot.pronouns[pronoun.lower()] is None:
+                    roleerr["pronoun"]["key"].append(pronoun)
+                    roleerr["pronoun"]["role"].append(role)
+                    hasroleerr = True
+
+    await bot.logs_channel.send("`%......%`\nComing back online.\n`%......%`")
 
     # Load addons
     addons = [
         "general",
-        "colors",
         "moderation",
-        "pronouns",
-        "stream",
         "system",
     ]
+
+    if hascolorroles: addons.append("colors")
+    if hasstreamroles: addons.append("stream")
+    if haspronounroles: addons.append("pronouns")
+
+    # Post list of cogs to load, good for debugging.
+    try:
+        cogsstring = "Loading these cogs:\n- " + "\n- ".join(addons)
+        await bot.logs_channel.send(cogsstring)
+    except errors.Forbidden:
+        pass
 
     # Notify if an addon fails to load.
     addonfail = False
@@ -106,7 +131,7 @@ async def on_ready():
         except errors.Forbidden:
             pass
 
-    # Notify if any roles are missing.
+    # Notify if any roles are missing from the server's role manager.
     if hasroleerr:
         for roletype, v in roleerr.items():
             if len(v["key"]) == 0:
@@ -115,7 +140,7 @@ async def on_ready():
             emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
             emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
             await bot.logs_channel.send("", embed=emb)
-        await bot.logs_channel.send("Patch these roles in your `conf.toml` dingus!")
+        await bot.logs_channel.send("Patch these roles in your `conf.toml` or the roles manager dingus!")
 
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")
