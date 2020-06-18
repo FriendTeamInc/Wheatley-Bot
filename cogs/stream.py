@@ -99,7 +99,8 @@ class Streams(commands.Cog):
         streamer = streamer.lower()
         if streamer in self.streams:
             try:
-                await self.streams[streamer].delete()
+                if self.streams[streamer] != None:
+                    await self.streams[streamer].delete()
                 await ctx.send("Deleted stream `{}`.".format(streamer))
                 del self.streams[streamer]
             except errors.Forbidden:

@@ -92,7 +92,7 @@ async def on_ready():
                     roleerr["pronoun"]["role"].append(role)
                     hasroleerr = True
 
-    await bot.logs_channel.send("`%......%`\nComing back online.\n`%......%`")
+    await bot.logs_channel.send("`%............%`\nComing back online.\n`%............%`")
 
     # Load addons
     addons = [

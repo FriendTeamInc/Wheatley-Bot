@@ -44,15 +44,15 @@ class System(commands.Cog):
     async def dumpconf(self, ctx):
         tom = {"roles":{"colors":{},"streams":{}}}
         for color, role in self.bot.colors.items():
-            if role is not None:
+            if role != None:
                 tom["roles"]["colors"][color] = role.name
             else:
-                tom["roles"]["colors"][color] = 0
+                tom["roles"]["colors"][color] = "error:missing"
         for stream, role in self.bot.streams.items():
-            if role is not None:
+            if role != None:
                 tom["roles"]["streams"][stream] = role.name
             else:
-                tom["roles"]["streams"][stream] = 0
+                tom["roles"]["streams"][stream] = "error:missing"
             
         await ctx.send("```toml\n{}```".format(toml.dumps(tom)))
 
