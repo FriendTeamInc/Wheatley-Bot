@@ -60,6 +60,16 @@ async def on_ready():
                 roleerr["stream"]["role"].append(role)
                 hasroleerr = True
 
+        # Pronoun roles
+        bot.pronouns = {}
+        pronouns = conf["roles"]["pronouns"]
+        for pronoun, role in pronouns.items():
+            bot.pronouns[pronoun.lower()] = get(guild.roles, name=role)
+            if bot.pronouns[pronoun.lower()] is None:
+                roleerr["pronoun"]["key"].append(pronoun)
+                roleerr["pronoun"]["role"].append(role)
+                hasroleerr = True
+
         # Dev channels
         bot.botdev_channel = get(guild.channels, name="bot-dev")
         bot.botdms_channel = get(guild.channels, name="bot-dm")
@@ -72,6 +82,7 @@ async def on_ready():
         "general",
         "colors",
         "moderation",
+        "pronouns",
         "stream",
         "system",
     ]

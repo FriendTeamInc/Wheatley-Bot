@@ -36,6 +36,12 @@ token = "discord.token.right-here"
 	percy   = "PercyStream" # https://www.twitch.tv/percy_creates
 	alchana = "AlchanaStream" # https://www.twitch.tv/alkana
 
+	# Roles for pronouns.
+	[roles.pronouns]
+	theythem = "they/them"
+	sheher   = "she/her"
+	hehim    = "he/him"
+
 # channel names for some debugging stuff, not needed but they help with issues.
 [dev]
 botdev = "bot-dev"
