@@ -18,17 +18,19 @@ class System(commands.Cog):
     @commands.has_role("BotDev")
     @commands.command(aliases=["pull"])
     async def botupdate(self, ctx):
-        await ctx.send("Pulling new git commits.")
+        """Pulls git commits."""
+        msg = await ctx.send("Pulling new git commits.")
         run(["git", "stash", "save"])
         run(["git", "pull"])
         run(["git", "stash", "clear"])
 
-        await ctx.send("Changes pulled.")
+        await msg.edit(content="Pulling new git commits. Changes pulled!")
 
     # Bot is meant to run under systemctl to auto-restart it.
     @commands.has_role("BotDev")
     @commands.command(aliases=["stop","restart"])
     async def botstop(self, ctx):
+        """Stops the bot."""
         await ctx.send("Exiting, should restart soon.")
         exit(0)
     
@@ -36,12 +38,21 @@ class System(commands.Cog):
     @commands.has_role("BotDev")
     @commands.command(aliases=["update"])
     async def upgrade(self, ctx):
+        """Pulls git commits and stops the bot."""
         await self.botupdate(ctx)
         await self.botstop(ctx)
+
+    @commands.has_role("BotDev")
+    @commands.command(aliases=["addon"])
+    async def addons(self, ctx):
+        """Shows the addons that were meant to be loaded."""
+        cogsstring = "Cogs:\n- " + "\n- ".join(addons)
+        await ctx.send(cogsstring)
     
     @commands.has_role("BotDev")
     @commands.command()
     async def dumpconf(self, ctx):
+        """Dumps the local (RAM) config to a TOML format."""
         tom = {"roles":{"colors":{},"streams":{}}}
         for color, role in self.bot.colors.items():
             if role != None:

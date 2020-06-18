@@ -95,26 +95,19 @@ async def on_ready():
     await bot.logs_channel.send("`%............%`\nComing back online.\n`%............%`")
 
     # Load addons
-    addons = [
+    bot.addons = [
         "general",
         "moderation",
         "system",
     ]
 
-    if hascolorroles: addons.append("colors")
-    if hasstreamroles: addons.append("stream")
-    if haspronounroles: addons.append("pronouns")
-
-    # Post list of cogs to load, good for debugging.
-    try:
-        cogsstring = "Loading these cogs:\n- " + "\n- ".join(addons)
-        await bot.logs_channel.send(cogsstring)
-    except errors.Forbidden:
-        pass
+    if hascolorroles: bot.addons.append("colors")
+    if hasstreamroles: bot.addons.append("stream")
+    if haspronounroles: bot.addons.append("pronouns")
 
     # Notify if an addon fails to load.
     addonfail = False
-    for addon in addons:
+    for addon in bot.addons:
         try:
             bot.load_extension("cogs." + addon)
             print("{} cog loaded.".format(addon))
@@ -140,7 +133,7 @@ async def on_ready():
             emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
             emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
             await bot.logs_channel.send("", embed=emb)
-        await bot.logs_channel.send("Patch these roles in your `conf.toml` or the roles manager dingus!")
+        #await bot.logs_channel.send("Patch these roles in your `conf.toml` or the roles manager dingus!")
 
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")

@@ -4,9 +4,9 @@ from discord.ext import commands
 from discord.utils import get
 
 
-class pronouns(commands.Cog):
+class Pronouns(commands.Cog):
     """
-    pronoun commands
+    Pronoun commands
     """
 
     def __init__(self, bot):
@@ -64,4 +64,4 @@ class pronouns(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(pronouns(bot))
+    bot.add_cog(Pronouns(bot))
