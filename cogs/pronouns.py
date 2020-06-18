@@ -54,7 +54,7 @@ class pronouns(commands.Cog):
             await ctx.send("{} `{}` is not a permissible {}."
                            "".format(user.mention, pronounstring, lang))
 
-    @commands.command(pass_context=True, aliases=['listcolours', 'listpronoun', 'listcolour'])
+    @commands.command(pass_context=True, aliases=['listpros'])
     async def listpronouns(self, ctx):
         """List available pronouns."""
         pronounlist = ""
