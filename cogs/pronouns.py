@@ -12,16 +12,6 @@ class Pronouns(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def change(self, ctx, pronoun, lang, cur_pronoun, user):
-        if not cur_pronoun:
-            await user.add_roles(pronoun)
-            await ctx.send("{} {} {} added."
-                           "".format(user.mention, lang, pronoun.name.lower()))
-        else:
-            await user.remove_roles(pronoun)
-            await ctx.send("{} {} {} removed."
-                           "".format(user.mention, lang, pronoun.name.lower()))
-
     @commands.command(pass_context=True, aliases=['pros'])
     async def pronouns(self, ctx, pronounstring=""):
         """Choose your pronouned role."""
@@ -37,11 +27,11 @@ class Pronouns(commands.Cog):
         if pronounrole in self.bot.pronouns:
             if self.bot.pronouns[pronounrole] in user.roles:
                 await user.remove_roles(self.bot.pronouns[pronounrole])
-                await ctx.send("{} {} {} removed."
+                await ctx.send("{} pronoun set {} removed."
                                "".format(user.mention, lang, pronounrole))
             else:
                 await user.add_roles(self.bot.pronouns[pronounrole])
-                await ctx.send("{} {} {} added."
+                await ctx.send("{} pronoun set {} added."
                                "".format(user.mention, lang, pronounrole))
         else:
             await ctx.send("{} `{}` is not an allowed pronoun set."
