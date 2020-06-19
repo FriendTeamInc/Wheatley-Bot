@@ -28,7 +28,7 @@ class Pronouns(commands.Cog):
         user = ctx.message.author
         lang = (ctx.invoked_with).capitalize()
         if not pronounstring:
-            await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"
+            await ctx.send("{} You forgot to choose a pronoun set! You can see the full list with `.list{}`"
                            "".format(user.mention, lang.lower(), lang.lower()))
             return
 
