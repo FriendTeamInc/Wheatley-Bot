@@ -17,11 +17,6 @@ class Pronouns(commands.Cog):
             await user.add_roles(pronoun)
             await ctx.send("{} {} {} added."
                            "".format(user.mention, lang, pronoun.name.lower()))
-        elif cur_pronoun != pronoun:
-            await user.remove_roles(cur_pronoun)
-            await user.add_roles(pronoun)
-            await ctx.send("{} {} changed from {} to {}.".format(user.mention,
-                           lang, cur_pronoun.name.lower(), pronoun.name.lower()))
         else:
             await user.remove_roles(pronoun)
             await ctx.send("{} {} {} removed."
@@ -39,20 +34,18 @@ class Pronouns(commands.Cog):
 
         pronounrole = pronounstring.lower()
 
-        applied_pronouns = []
-        for pronoun in self.bot.pronouns:
-            if self.bot.pronouns[pronoun] in user.roles:
-                applied_pronouns.append(self.bot.pronouns[pronoun])
-        if applied_pronouns:
-            cur_pronoun = applied_pronouns[0]
-        else:
-            cur_pronoun = None
-
         if pronounrole in self.bot.pronouns:
-            await self.change(ctx, self.bot.pronouns[pronounrole], lang, cur_pronoun, user)
+            if self.bot.pronouns[pronoun] in user.roles:
+                await user.remove_roles(pronoun)
+                await ctx.send("{} {} {} removed."
+                               "".format(user.mention, lang, pronoun.name.lower()))
+            else:
+                await user.add_roles(pronoun)
+                await ctx.send("{} {} {} added."
+                               "".format(user.mention, lang, pronoun.name.lower()))
         else:
-            await ctx.send("{} `{}` is not a permissible {}."
-                           "".format(user.mention, pronounstring, lang))
+            await ctx.send("{} `{}` is not an allowed pronoun set."
+                           "".format(user.mention, pronounstring))
 
     @commands.command(pass_context=True, aliases=['listpros'])
     async def listpronouns(self, ctx):
