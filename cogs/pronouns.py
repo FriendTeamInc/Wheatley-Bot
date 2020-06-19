@@ -35,14 +35,14 @@ class Pronouns(commands.Cog):
         pronounrole = pronounstring.lower()
 
         if pronounrole in self.bot.pronouns:
-            if self.bot.pronouns[pronoun] in user.roles:
-                await user.remove_roles(pronoun)
+            if self.bot.pronouns[pronounrole] in user.roles:
+                await user.remove_roles(self.bot.pronouns[pronounrole])
                 await ctx.send("{} {} {} removed."
-                               "".format(user.mention, lang, pronoun.name.lower()))
+                               "".format(user.mention, lang, pronounrole))
             else:
-                await user.add_roles(pronoun)
+                await user.add_roles(self.bot.pronouns[pronounrole])
                 await ctx.send("{} {} {} added."
-                               "".format(user.mention, lang, pronoun.name.lower()))
+                               "".format(user.mention, lang, pronounrole))
         else:
             await ctx.send("{} `{}` is not an allowed pronoun set."
                            "".format(user.mention, pronounstring))
