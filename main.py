@@ -136,7 +136,7 @@ async def on_ready():
 
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")
-    await bot.botdev_channel.send("Back online!")
+    #await bot.botdev_channel.send("Back online!")
 
 
 @bot.event

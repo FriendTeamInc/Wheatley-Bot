@@ -17,21 +17,28 @@ class System(commands.Cog):
 
     @commands.has_role("BotDev")
     @commands.command(aliases=["pull"])
-    async def botupdate(self, ctx):
+    async def botupdate(self, ctx, restarting:bool=False):
         """Pulls git commits."""
-        msg = await ctx.send("Pulling new git commits.")
+        msgtxt = "Pulling new git commits."
+        msg = await ctx.send(msgtxt)
         run(["git", "stash", "save"])
         run(["git", "pull"])
         run(["git", "stash", "clear"])
-
-        await msg.edit(content="Pulling new git commits. Changes pulled!")
+        
+        msgtxt += " Changes pulled!"
+        if restarting:
+            msgtxt += " Restarting now."
+        
+        await msg.edit(content=msgtxt)
+            
 
     # Bot is meant to run under systemctl to auto-restart it.
     @commands.has_role("BotDev")
     @commands.command(aliases=["stop","restart"])
-    async def botstop(self, ctx):
+    async def botstop(self, ctx, silent:bool=False):
         """Stops the bot."""
-        await ctx.send("Exiting, should restart soon.")
+        if not silent:
+            await ctx.send("Exiting, should restart soon.")
         exit(0)
     
     # Is this safe? probably not lol
@@ -39,8 +46,8 @@ class System(commands.Cog):
     @commands.command(aliases=["update"])
     async def upgrade(self, ctx):
         """Pulls git commits and stops the bot."""
-        await self.botupdate(ctx)
-        await self.botstop(ctx)
+        await self.botupdate(ctx, True)
+        await self.botstop(ctx, True)
 
     @commands.has_role("BotDev")
     @commands.command(aliases=["addon"])
