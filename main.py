@@ -143,7 +143,7 @@ async def on_ready():
 async def on_member_join(user):
     await user.add_roles(bot.friend_role)
 
-    emb = Embed(title="Member Joined", colour=Colour.green())
+    emb = Embed(title="Member Joined", color=Color.green())
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
@@ -151,7 +151,7 @@ async def on_member_join(user):
 
 @bot.event
 async def on_member_remove(user):
-    emb = Embed(title="Member Left", colour=Colour.green())
+    emb = Embed(title="Member Left", color=Color.green())
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
@@ -159,7 +159,7 @@ async def on_member_remove(user):
 
 @bot.event
 async def on_member_unban(self, guild, user):
-    emb = Embed(title="Member Unbanned", colour=Colour.red())
+    emb = Embed(title="Member Unbanned", color=Color.red())
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
