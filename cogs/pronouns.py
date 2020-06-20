@@ -16,23 +16,25 @@ class Pronouns(commands.Cog):
     async def pronouns(self, ctx, pronounstring=""):
         """Choose your pronouned role."""
         user = ctx.message.author
-        lang = (ctx.invoked_with).capitalize()
+        lang = ctx.invoked_with
         if not pronounstring:
-            await ctx.send("{} You forgot to choose a pronoun set! You can see the full list with `.list{}`"
-                           "".format(user.mention, lang.lower(), lang.lower()))
+            await ctx.send("{} You forgot to choose a pronoun set! You can see"
+                           " the full list with `.list{}`".format(user.mention,
+                            lang.lower(), lang.lower()))
             return
 
         pronounrole = pronounstring.lower()
 
         if pronounrole in self.bot.pronouns:
-            if self.bot.pronouns[pronounrole] in user.roles:
-                await user.remove_roles(self.bot.pronouns[pronounrole])
+            pronounset = self.bot.pronouns[pronounrole]
+            if pronounset in user.roles:
+                await user.remove_roles(pronounset)
                 await ctx.send("{} pronoun set {} removed."
-                               "".format(user.mention, lang, pronounrole))
+                               "".format(user.mention, lang, pronounset))
             else:
-                await user.add_roles(self.bot.pronouns[pronounrole])
+                await user.add_roles(pronounset)
                 await ctx.send("{} pronoun set {} added."
-                               "".format(user.mention, lang, pronounrole))
+                               "".format(user.mention, lang, pronounset))
         else:
             await ctx.send("{} `{}` is not an allowed pronoun set."
                            "".format(user.mention, pronounstring))

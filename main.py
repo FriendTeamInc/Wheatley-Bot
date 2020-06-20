@@ -48,9 +48,9 @@ async def on_ready():
         bot.owner_role  = get(guild.roles, name="Admin")
 
         # Dev channels
-        bot.botdev_channel = get(guild.channels, name="bot-dev")
-        bot.botdms_channel = get(guild.channels, name="bot-dm")
-        bot.logs_channel   = get(guild.channels, name="bot-logs")
+        bot.botdev_channel   = get(guild.channels, name="bot-dev")
+        bot.logs_channel     = get(guild.channels, name="bot-logs")
+        bot.userlogs_channel = get(guild.channels, name="user-logs")
 
         if conf["roles"] == None:
             missingroleskey = True
@@ -92,7 +92,7 @@ async def on_ready():
                     roleerr["pronoun"]["role"].append(role)
                     hasroleerr = True
 
-    await bot.logs_channel.send("`%............%`\nComing back online.\n`%............%`")
+    await bot.logs_channel.send("Coming back online.")
 
     # Load addons
     bot.addons = [
@@ -140,8 +140,29 @@ async def on_ready():
 
 
 @bot.event
-async def on_member_join(member):
-    await member.add_roles(bot.friend_role)
+async def on_member_join(user):
+    await user.add_roles(bot.friend_role)
+
+    emb = Embed(title="Member Joined", colour=Colour.green())
+    emb.add_field(name="Member:", value=user.name, inline=True)
+    emb.set_thumbnail(url=user.avatar_url)
+    await bot.userlogs_channel.send("", embed=emb)
+
+
+@bot.event
+async def on_member_remove(user):
+    emb = Embed(title="Member Left", colour=Colour.green())
+    emb.add_field(name="Member:", value=user.name, inline=True)
+    emb.set_thumbnail(url=user.avatar_url)
+    await bot.userlogs_channel.send("", embed=emb)
+
+
+@bot.event
+async def on_member_unban(self, guild, user):
+    emb = Embed(title="Member Unbanned", colour=Colour.red())
+    emb.add_field(name="Member:", value=user.name, inline=True)
+    emb.set_thumbnail(url=user.avatar_url)
+    await bot.userlogs_channel.send("", embed=emb)
 
 
 @bot.event
