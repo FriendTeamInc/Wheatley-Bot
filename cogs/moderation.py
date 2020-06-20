@@ -45,8 +45,8 @@ class Moderation(commands.Cog):
             if reason == "":
                 dm_msg = "You have been kicked from {}.".format(ctx.guild.name)
             else:
-                dm_msg = "You have been kicked from {} for the following reason:\n{}"
-                          "".format(ctx.guild.name, reason)
+                dm_msg = ("You have been kicked from {} for the following reason:\n{}"
+                          "".format(ctx.guild.name, reason))
             await self.dm(member, dm_msg)
             await member.kick()
             await ctx.send("I've kicked {}.".format(member))
@@ -78,17 +78,17 @@ class Moderation(commands.Cog):
                     dm_msg = "You have been banned from {}.".format(
                         ctx.guild.name)
                 else:
-                    dm_msg = "You have been banned from {} for the following reason:\n{}"
-                              "".format(ctx.guild.name, reason)
+                    dm_msg = ("You have been banned from {} for the following reason:\n{}"
+                              "".format(ctx.guild.name, reason))
                 await self.dm(member, dm_msg)
-                await member.ban(delete_message_days=0, reason=reason)
+                await member.ban(delete_message_days=0)
                 await ctx.send("I've banned {}.".format(member))
             except errors.Forbidden:
                 await self.noperms(ctx)
 
     @commands.has_permissions(ban_members=True)
     @commands.command()
-    async def banid(self, ctx, uid="", *, reason: str=""):
+    async def banid(self, ctx, uid="", *, reason=""):
         """Ban a member by user id. (Staff Only)"""
         try:
             member = Object(uid)
@@ -97,7 +97,7 @@ class Moderation(commands.Cog):
             return
 
         try:
-            await ctx.guild.ban(member, delete_message_days=0, reason=reason)
+            await ctx.guild.ban(member)
             await ctx.send("I've banned ID: {}.".format(uid))
         except errors.Forbidden:
             await self.noperms(ctx)
@@ -111,7 +111,7 @@ class Moderation(commands.Cog):
         if reason == "":
             await channel.send(":lock: Channel locked.")
         else:
-            await channel.send(":lock: Channel locked. Reason: {}".format(reason))
+            await channel.send(":lock: Channel locked. The given reason is: {}".format(reason))
 
     @commands.has_permissions(manage_messages=True)
     @commands.command()
