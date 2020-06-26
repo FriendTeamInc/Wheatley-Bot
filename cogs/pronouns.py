@@ -1,4 +1,4 @@
-# Taken from NutCord's GLaDOS bot
+# Modified from colors.py
 
 from discord.ext import commands
 from discord.utils import get

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.8
+#!/usr/bin/env python3
 
 from sys import exit
 from os import getenv
@@ -42,15 +42,16 @@ async def on_ready():
 
         # Friends
         # Will be changed later to different roles to make it more server-agnostic
-        bot.admin_role  = get(guild.roles, name="Admin")
-        bot.friend_role = get(guild.roles, name="Friend")
-        bot.staff_role  = get(guild.roles, name="Admin")
         bot.owner_role  = get(guild.roles, name="Admin")
+        bot.admin_role  = get(guild.roles, name="Admin")
+        bot.staff_role  = get(guild.roles, name="Admin")
+        bot.friend_role = get(guild.roles, name="Friend")
 
         # Dev channels
         bot.botdev_channel   = get(guild.channels, name="bot-dev")
-        bot.logs_channel     = get(guild.channels, name="bot-logs")
+        bot.botlogs_channel  = get(guild.channels, name="bot-logs")
         bot.userlogs_channel = get(guild.channels, name="user-logs")
+        bot.msglogs_channel  = get(guild.channels, name="msg-logs")
 
         if conf["roles"] == None:
             missingroleskey = True
@@ -92,7 +93,7 @@ async def on_ready():
                     roleerr["pronoun"]["role"].append(role)
                     hasroleerr = True
 
-    await bot.logs_channel.send("Coming back online.")
+    await bot.botlogs_channel.send("Coming back online.")
 
     # Load addons
     bot.addons = [
@@ -118,8 +119,7 @@ async def on_ready():
             print(f"Failed to load {addon} :\n{type(e).__name__} : {e}")
     if addonfail:
         try:
-            logchannel = bot.logs_channel
-            await logchannel.send("", embed=emb)
+            await bot.botlogs_channel.send("", embed=emb)
         except errors.Forbidden:
             pass
 
@@ -131,8 +131,8 @@ async def on_ready():
             emb = Embed(title=f"Missing `{roletype}` roles", color=Color.orange())
             emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
             emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
-            await bot.logs_channel.send("", embed=emb)
-        #await bot.logs_channel.send("Patch these roles in your `conf.toml` or the roles manager dingus!")
+            await bot.botlogs_channel.send("", embed=emb)
+        #await bot.botlogs_channel.send("Patch these roles in your `conf.toml` or the roles manager dingus!")
 
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")
@@ -141,8 +141,6 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(user):
-    await user.add_roles(bot.friend_role)
-
     emb = Embed(title="Member Joined", color=Color.green())
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
@@ -151,15 +149,23 @@ async def on_member_join(user):
 
 @bot.event
 async def on_member_remove(user):
-    emb = Embed(title="Member Left", color=Color.green())
+    emb = Embed(title="Member Left", color=Color.red())
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
 
 
 @bot.event
-async def on_member_unban(self, guild, user):
-    emb = Embed(title="Member Unbanned", color=Color.red())
+async def on_member_ban(guild, user):
+    emb = Embed(title="Member Banned", color=Color.dark_red())
+    emb.add_field(name="Member:", value=user.name, inline=True)
+    emb.set_thumbnail(url=user.avatar_url)
+    await bot.userlogs_channel.send("", embed=emb)
+
+
+@bot.event
+async def on_member_unban(guild, user):
+    emb = Embed(title="Member Unbanned", color=Color.teal())
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
@@ -201,6 +207,13 @@ async def about(ctx):
     """Links to source code on GitHub."""
     await ctx.send("You can view my source code here: "
         "https://github.com/NotQuiteApex/Wheatley-Bot")
+
+
+@commands.has_role("Admin")
+@bot.command()
+async def say(ctx, channel: discord.TextChannel, *, msg: str=""):
+    """The bot speaks!"""
+    await channel.send(escape_mentions(message))
 
 
 # Run the bot

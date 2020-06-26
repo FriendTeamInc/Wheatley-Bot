@@ -1,3 +1,5 @@
+# Moderation functions for staff, because using Discord's UI can be slow.
+
 from discord import Member, Embed, Colour, errors, Object
 from discord.ext import commands
 
