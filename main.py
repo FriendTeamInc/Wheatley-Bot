@@ -5,7 +5,7 @@ from os import getenv
 from traceback import format_exception
 from asyncio import sleep
 
-from discord import errors, Embed, Color
+from discord import errors, Embed, Color, TextChannel
 from discord.ext import commands
 from discord.utils import get
 
@@ -99,6 +99,7 @@ async def on_ready():
     bot.addons = [
         "moderation",
         "system",
+        "warn"
     ]
 
     if hascolorroles: bot.addons.append("colors")
@@ -211,7 +212,7 @@ async def about(ctx):
 
 @commands.has_role("Admin")
 @bot.command()
-async def say(ctx, channel: discord.TextChannel, *, msg: str=""):
+async def say(ctx, channel: TextChannel, *, msg: str=""):
     """The bot speaks!"""
     await channel.send(escape_mentions(message))
 
