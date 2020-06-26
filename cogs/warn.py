@@ -83,18 +83,18 @@ class Warn(commands.Cog):
         # Do what needs to be done based on the active warns.
         if warnsno == 1:
             msg += f" {member.mention}, this is a verbal warning."
-            self.dm(member,
+            await self.dm(member,
                 "This is only a verbal warning, but on your next"
                 " warning you will be kicked from the server.")
         elif warnsno == 2:
             msg += f" {member.mention} has been kicked."
-            self.dm(member,
+            await self.dm(member,
                 "This is your second warning, so you have been kicked."
                 " You may return to the server if you'd like, but"
                 " another offense will result in an indefinite ban.")
         elif warnsno >= 3:
             msg += f" {member.mention} has been banned."
-            self.dm(member,
+            await self.dm(member,
                 "You have been banned indefinitely as a result of the warn."
                 " If you would like to appeal this ban, please direct"
                 " message this bot after 24 hours to contact staff.")
@@ -103,7 +103,7 @@ class Warn(commands.Cog):
             msg += f" Warn reason: {reason}"
 
         # Announce the warn
-        ctx.send(msg)
+        await ctx.send(msg)
 
         # Time to log
         if reason == "":
@@ -207,13 +207,13 @@ class Warn(commands.Cog):
         msg += f"Total warns: {len(warnlist)}"
 
         if not hasperms:
-            self.dm(member, msg)
-            ctx.send(f"{ctx.message.author.mention} I have DM'd your list of warnings.")
+            await self.dm(member, msg)
+            await ctx.send(f"{ctx.message.author.mention} I have DM'd your list of warnings.")
         else:
             if postit:
-                ctx.send(msg)
+                await ctx.send(msg)
             else:
-                self.bot.userlogs_channel.send(msg)
+                await self.bot.userlogs_channel.send(msg)
 
 
 def setup(bot):
