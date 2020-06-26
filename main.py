@@ -214,7 +214,7 @@ async def about(ctx):
 @bot.command()
 async def say(ctx, channel: TextChannel, *, msg: str=""):
     """The bot speaks!"""
-    await channel.send(escape_mentions(message))
+    await channel.send(escape_mentions(msg))
 
 
 # Run the bot

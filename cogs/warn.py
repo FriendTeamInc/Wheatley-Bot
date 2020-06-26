@@ -109,7 +109,7 @@ class Warn(commands.Cog):
         if reason == "":
             reason = "No reason specified."
 
-        emb = Embed(title="User Warned", colour=Colour.orange())
+        emb = Embed(title="User Warned", color=Color.orange())
         emb.add_field(name="User:", value=member, inline=True)
         emb.add_field(name="Warning#:", value=warnsno, inline=True)
         emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
@@ -159,7 +159,7 @@ class Warn(commands.Cog):
         warnlist[warnidx]["active"] = False
         await ctx.send(f"Warn #{num} removed for member.")
 
-        emb = Embed(title="User Unwarned", colour=Colour.blue())
+        emb = Embed(title="User Unwarned", color=Color.blue())
         emb.add_field(name="User:", value=member, inline=True)
         emb.add_field(name="Warning#:", value=num, inline=True)
         emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
@@ -169,7 +169,7 @@ class Warn(commands.Cog):
             dump(warnlist, f)
 
 
-    @commands.command()
+    @commands.command(aliases=["listwarns"])
     async def listwarn(self, ctx, member: Member=None, postit: bool=False):
         """
         List warnings someone may have.
@@ -188,7 +188,7 @@ class Warn(commands.Cog):
             with open(f"db/{memberid}.json") as f:
                 warnlist = load(f)
         except FileNotFoundError:
-            return await ctx.send("This member does not have any warns on file.")
+            return await ctx.send(f"Member {member} does not have any warns on file.")
 
         shortwarns = []
         for warn in warnlist:
