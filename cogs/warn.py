@@ -60,7 +60,7 @@ class Warn(commands.Cog):
             "member": f"{member.name}#{member.discriminator}, {memberid}",
             "timestamp": strftime("%Y-%m-%d %H:%M:%S", localtime()),
             "reason": reason,
-            "author": f"{author.name}#{author.discriminator}"
+            "author": f"{author.name}"
         })
 
         # Count active warns.
@@ -122,7 +122,7 @@ class Warn(commands.Cog):
 
     @commands.has_permissions(manage_roles=True)
     @commands.command(aliases=["deletewarn", "delwarn"])
-    async def unwarn(self, ctx, member: Member, num: int):
+    async def unwarn(self, ctx, member: Member, num: int=0):
         """
         Remove a warning from a member. (Staff only)
         The warn is not deleted from the file we keep, but is simply made inactive.
@@ -130,7 +130,7 @@ class Warn(commands.Cog):
         author = ctx.message.author
         if member == author:
             return await ctx.send("You cannot remove a warn from yourself.")
-        elif num >= 1:
+        elif num < 1:
             return await ctx.send("Please properly specify a warn to undo. ( >=1 )")
 
         memberid = str(member.id)
