@@ -111,12 +111,12 @@ class Warn(commands.Cog):
 
         emb = Embed(title="User Warned", color=Color.orange())
         emb.add_field(name="User:", value=member, inline=True)
-        emb.add_field(name="Warning#:", value=warnsno, inline=True)
         emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
         emb.add_field(name="Reason:", value=reason, inline=True)
+        emb.add_field(name="Warn#:", value=warnsno, inline=True)
         await self.bot.userlogs_channel.send("", embed=emb)
         
-        with open(f"db/{memberid}.json") as f:
+        with open(f"db/{memberid}.json", "w") as f:
             dump(warnlist, f)
 
 
@@ -161,11 +161,11 @@ class Warn(commands.Cog):
 
         emb = Embed(title="User Unwarned", color=Color.blue())
         emb.add_field(name="User:", value=member, inline=True)
-        emb.add_field(name="Warning#:", value=num, inline=True)
         emb.add_field(name="Mod:", value=ctx.message.author, inline=True)
+        emb.add_field(name="Warning#:", value=num, inline=True)
         await self.bot.userlogs_channel.send("", embed=emb)
 
-        with open(f"db/{memberid}.json") as f:
+        with open(f"db/{memberid}.json", "w") as f:
             dump(warnlist, f)
 
 
