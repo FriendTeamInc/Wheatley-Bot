@@ -82,18 +82,18 @@ class Warn(commands.Cog):
 
         # Do what needs to be done based on the active warns.
         if warnsno == 1:
-            msg += f" {member}, this is a verbal warning."
+            msg += f" {member.mention}, this is a verbal warning."
             self.dm(member,
                 "This is only a verbal warning, but on your next"
                 " warning you will be kicked from the server.")
         elif warnsno == 2:
-            msg += f" {member} has been kicked."
+            msg += f" {member.mention} has been kicked."
             self.dm(member,
                 "This is your second warning, so you have been kicked."
                 " You may return to the server if you'd like, but"
                 " another offense will result in an indefinite ban.")
         elif warnsno >= 3:
-            msg += f" {member} has been banned."
+            msg += f" {member.mention} has been banned."
             self.dm(member,
                 "You have been banned indefinitely as a result of the warn."
                 " If you would like to appeal this ban, please direct"
@@ -200,9 +200,9 @@ class Warn(commands.Cog):
 
         msg = f":warning: {member}'s warns.\n"
         for i, warn in enumerate(shortwarns):
-            msg += f"*{i}.* \"" + warn["reason"] + f"\" on {warn["timestamp"]}"
+            msg += f"*{i}.* \"" + warn["reason"] + f"\" on {warn['timestamp']}"
             if hasperms:
-                msg += f"from {warn["author"]}"
+                msg += f"from {warn['author']}"
             msg += "\n"
         msg += f"Total warns: {len(warnlist)}"
 

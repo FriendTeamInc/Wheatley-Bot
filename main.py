@@ -7,7 +7,7 @@ from asyncio import sleep
 
 from discord import errors, Embed, Color, TextChannel
 from discord.ext import commands
-from discord.utils import get
+from discord.utils import get, escape_mentions
 
 import toml
 
