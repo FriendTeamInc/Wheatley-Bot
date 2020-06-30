@@ -51,6 +51,8 @@ async def on_ready():
         # Dev channels
         bot.botdev_channel   = get(guild.channels, name="bot-dev")
         bot.botlogs_channel  = get(guild.channels, name="bot-logs")
+
+        # User log channels (joins, leaves, message edits, etc.)
         bot.userlogs_channel = get(guild.channels, name="user-logs")
         bot.msglogs_channel  = get(guild.channels, name="msg-logs")
 

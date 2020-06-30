@@ -107,7 +107,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def lockdown(self, ctx, *, reason=""):
-        """Lock down a channel."""
+        """Lock down a channel. (Staff Only)"""
         channel = ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=False)
         if reason == "":
@@ -118,7 +118,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def unlock(self, ctx):
-        """Unlock a channel."""
+        """Unlock a channel. (Staff Only)"""
         channel = ctx.channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=True)
         await channel.send(":unlock: Channel Unlocked")

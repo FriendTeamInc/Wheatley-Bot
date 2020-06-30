@@ -49,12 +49,12 @@ class System(commands.Cog):
         await self.botupdate(ctx, True)
         await self.botstop(ctx, True)
 
-    @commands.has_role("BotDev")
-    @commands.command(aliases=["addon"])
-    async def addons(self, ctx):
-        """Shows the addons that were meant to be loaded."""
-        cogsstring = "Cogs:\n- " + "\n- ".join(addons)
-        await ctx.send(cogsstring)
+    # @commands.has_role("BotDev")
+    # @commands.command(aliases=["addon"])
+    # async def addons(self, ctx):
+    #     """Shows the addons that were meant to be loaded."""
+    #     cogsstring = "Cogs:\n- " + "\n- ".join(addons)
+    #     await ctx.send(cogsstring)
     
     @commands.has_role("BotDev")
     @commands.command()
