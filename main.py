@@ -67,7 +67,7 @@ async def on_ready():
                 bot.roles[confrole] = {}
                 for rolekey, rolename in conf["roles"][confrole].items():
                     role = get(guild.roles, name=rolename)
-                    bot.roles[roletype][rolekey.lower()] = role
+                    bot.roles[confrole][rolekey.lower()] = role
 
                     # report roles for errors
                     if role is None:
