@@ -19,21 +19,22 @@ except FileNotFoundError:
     exit("Config not found!")
 
 
+userroles = ["color", "stream", "pronoun"]
+
+
 @bot.event
 async def on_ready():
     bot.conf = conf
 
+    # important role vars for error reporting
     missingroleskey = False
-    roleerr = {
-        "color": {"role":[],"key":[]},
-        "stream": {"role":[],"key":[]},
-        "pronoun": {"role":[],"key":[]}
-    }
     hasroleerr = False
+    roleerr = {}
+    hasroles = {}
 
-    hascolorroles = False
-    hasstreamroles = False
-    haspronounroles = False
+    for role in userroles:
+        roleerr[role] = {"role":[],"key":[]}
+        hasroles[role] = True
     
     for guild in bot.guilds:
         # This bot is only meant to manage one server.
@@ -57,41 +58,25 @@ async def on_ready():
             missingroleskey = True
             break
 
-        # Color roles
-        if conf["roles"]["colors"] != None:
-            hascolorroles = True
-            bot.colors = {}
-            colors = conf["roles"]["colors"]
-            for color, role in colors.items():
-                bot.colors[color.lower()] = get(guild.roles, name=role)
-                if bot.colors[color.lower()] is None:
-                    roleerr["color"]["key"].append(color)
-                    roleerr["color"]["role"].append(role)
-                    hasroleerr = True
+        # Load in user obtainable roles
+        bot.roles = {}
+        for roletype in userroles:
+            confrole = roletype + "s" # conf uses the plural noun
+            if conf["roles"][confrole] != None: # check if role config exists
+                # iterate through list and add roles
+                bot.roles[confrole] = {}
+                for rolekey, rolename in conf["roles"][confrole]:
+                    role = get(guild.roles, name=rolename)
+                    bot.roles[roletype][rolekey.lower()] = role
 
-        # Stream roles
-        if conf["roles"]["streams"] != None:
-            hasstreamroles = True
-            bot.streams = {}
-            streams = conf["roles"]["streams"]
-            for stream, role in streams.items():
-                bot.streams[stream.lower()] = get(guild.roles, name=role)
-                if bot.streams[stream.lower()] is None:
-                    roleerr["stream"]["key"].append(stream)
-                    roleerr["stream"]["role"].append(role)
-                    hasroleerr = True
-
-        # Pronoun roles
-        if conf["roles"]["pronouns"] != None:
-            haspronounroles = True
-            bot.pronouns = {}
-            pronouns = conf["roles"]["pronouns"]
-            for pronoun, role in pronouns.items():
-                bot.pronouns[pronoun.lower()] = get(guild.roles, name=role)
-                if bot.pronouns[pronoun.lower()] is None:
-                    roleerr["pronoun"]["key"].append(pronoun)
-                    roleerr["pronoun"]["role"].append(role)
-                    hasroleerr = True
+                    # report roles for errors
+                    if role is None:
+                        roleerr[roletype]["key"].append(rolekey)
+                        roleerr[roletype]["role"].append(rolename)
+                        hasroleerr = True
+            else:
+                # roles not found in config
+                hasroles[roletype] = False
 
     await bot.botlogs_channel.send("Coming back online.")
 
@@ -102,9 +87,10 @@ async def on_ready():
         "warn"
     ]
 
-    if hascolorroles: bot.addons.append("colors")
-    if hasstreamroles: bot.addons.append("stream")
-    if haspronounroles: bot.addons.append("pronouns")
+    # load extra user role cogs if available
+    for roletype in userroles:
+        if hasroles[roletype]:
+            bot.addons.append(roletype + "s")
 
     # Notify if an addon fails to load.
     addonfail = False
@@ -140,36 +126,24 @@ async def on_ready():
     #await bot.botdev_channel.send("Back online!")
 
 
-@bot.event
-async def on_member_join(user):
-    emb = Embed(title="Member Joined", color=Color.green())
+async def logembed(user, stat, color):
+    global bot
+    emb = Embed(title="Member "+stat, color=color)
     emb.add_field(name="Member:", value=user.name, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
 
+@bot.event
+async def on_member_join(user): await logembed(user, "Joined", Color.green())
 
 @bot.event
-async def on_member_remove(user):
-    emb = Embed(title="Member Left", color=Color.red())
-    emb.add_field(name="Member:", value=user.name, inline=True)
-    emb.set_thumbnail(url=user.avatar_url)
-    await bot.userlogs_channel.send("", embed=emb)
-
+async def on_member_remove(user): await logembed(user, "Left", Color.red())
 
 @bot.event
-async def on_member_ban(guild, user):
-    emb = Embed(title="Member Banned", color=Color.dark_red())
-    emb.add_field(name="Member:", value=user.name, inline=True)
-    emb.set_thumbnail(url=user.avatar_url)
-    await bot.userlogs_channel.send("", embed=emb)
-
+async def on_member_ban(guild, user): await logembed(user, "Banned", Color.dark_red())
 
 @bot.event
-async def on_member_unban(guild, user):
-    emb = Embed(title="Member Unbanned", color=Color.teal())
-    emb.add_field(name="Member:", value=user.name, inline=True)
-    emb.set_thumbnail(url=user.avatar_url)
-    await bot.userlogs_channel.send("", embed=emb)
+async def on_member_unban(guild, user): await logembed(user, "Unbanned", Color.teal())
 
 
 @bot.event
@@ -178,10 +152,9 @@ async def on_command_error(ctx, error):
         return
     elif isinstance(error, (commands.MissingRequiredArgument, commands.BadArgument)):
         helpm = await bot.formatter.format_help_for(ctx, ctx.command)
-        for m in helpm:
-            await ctx.send(m)
+        for m in helpm: await ctx.send(m)
     elif isinstance(error, commands.errors.CommandOnCooldown):
-        message = await ctx.message.channel.send(
+        message = await ctx.send(
             "{} This command was used {:.2f}s ago and is on "
             "cooldown. Try again in {:.2f}s."
             "".format(ctx.message.author.mention,
@@ -191,16 +164,12 @@ async def on_command_error(ctx, error):
         await sleep(10)
         await message.delete()
     else:
-        await ctx.send("An error occured while processing the `{}` command."
-                       "".format(ctx.command.name))
-        print(
-            'Ignoring exception in command {0.command} in {0.message.channel}'.format(ctx))
-        botdev_msg = "Exception occured in `{0.command}` in {0.message.channel.mention}".format(
-            ctx)
+        await ctx.send(f"An error occured while processing the `{ctx.command.name}` command.")
+        print(f"Ignoring exception in command {ctx.command} in {ctx.message.channel}")
+        botdev_msg = f"Exception occured in `{ctx.command}` in {ctx.message.channel.mention}"
         tb = format_exception(type(error), error, error.__traceback__)
         print(''.join(tb))
-        botdev_channel = bot.botdev_channel
-        await botdev_channel.send(botdev_msg + '\n```' + ''.join(tb) + '\n```')
+        await bot.botdev_channel.send(botdev_msg + '\n```' + ''.join(tb) + '\n```')
 
 
 @bot.command(aliases=['source'])

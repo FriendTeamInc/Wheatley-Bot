@@ -13,17 +13,15 @@ class Streams(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.guild = bot.guild
-        self.streams = bot.streams
+        self.streams = bot.roles["streams"]
 
     async def change(self, ctx, stream, lang, cur_stream, user):
         if stream not in cur_stream:
             await user.add_roles(stream)
-            await ctx.send("{} {} role {} added."
-                           "".format(user.mention, lang, stream.name))
+            await ctx.send(f"{user.mention} stream role {stream.name} added.")
         else:
             await user.remove_roles(stream)
-            await ctx.send("{} {} role {} removed."
-                           "".format(user.mention, lang, stream.name))
+            await ctx.send(f"{user.mention} stream role {stream.name} removed.")
 
     @commands.command(aliases=['stream'])
     async def streamer(self, ctx, streamstring=""):
@@ -31,27 +29,28 @@ class Streams(commands.Cog):
         user = ctx.message.author
         lang = (ctx.invoked_with).capitalize()
         if not streamstring:
-            await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"
-                           "".format(user.mention, lang.lower(), lang.lower()))
+            await ctx.send(f"{user.mention} You forgot to choose a stream role!"
+                           f" You can see the full list with `.list{lang.lower()}`")
             return
             
         streamstring = streamstring.lower()
         
         if streamstring == "all" or streamstring == "any":
-            toggle = "enabled"
+            enable = True
             
             # First check for any roles already had
             for stream in self.streams:
                 if self.streams[stream] in user.roles:
-                    toggle = "disabled"
+                    enable = False
                     await user.remove_roles(self.streams[stream])
             
-            if toggle is "enabled":
+            if enable:
                 for stream in self.streams:
                     await user.add_roles(self.streams[stream])
             
-            await ctx.send("{} now has all stream notifs {}."
-                           "".format(user.mention, toggle))
+            await ctx.send(f"{user.mention} now has all stream notifs"
+                            f" {"enabled" if enable else "disabled"}.")
+
             return
         
         applied_streams = []
@@ -62,18 +61,15 @@ class Streams(commands.Cog):
         if streamstring in self.streams:
             await self.change(ctx, self.streams[streamstring], lang, applied_streams, user)
         else:
-            await ctx.send("{} `{}` is not a permissible {}."
-                           "".format(user.mention, streamstring, lang))
+            await ctx.send(f"{user.mention} `{streamstring}` is not a permissible {lang}.")
 
     @commands.command(aliases=['liststreamers', 'liststreamer', 'liststream'])
     async def liststreams(self, ctx):
         """List available streams to be notified of."""
-        streamlist = ""
+        streamlist = ":tv: **__Streamer Notif roles:__**\n- All\n"
         for stream in self.streams:
-            stream = stream.title()
-            streamlist += "- " + stream + "\n"
-        streamlist = "- All\n" + streamlist
-        await ctx.send(":tv: **__Streamer Notif roles:__**\n" + streamlist)
+            streamlist += f"- {stream.title()}\n"
+        await ctx.send(streamlist)
     
     @commands.has_permissions(manage_roles=True)
     @commands.command(aliases=['addstreamer'])
@@ -92,7 +88,7 @@ class Streams(commands.Cog):
         try:
             await self.guild.create_role(name=streamstring)
             self.streams[streamer] = get(self.guild.roles, name=streamstring)
-            await ctx.send("Added stream for {} as {}".format(streamer, streamstring))
+            await ctx.send(f"Added stream for {streamer} as {streamstring}")
         except errors.Forbidden:
             await ctx.send("I don't have perms to do that!")
         
@@ -107,7 +103,7 @@ class Streams(commands.Cog):
             try:
                 if self.streams[streamer] != None:
                     await self.streams[streamer].delete()
-                await ctx.send("Deleted stream `{}`.".format(streamer))
+                await ctx.send(f"Deleted stream `{streamer}`.")
                 del self.streams[streamer]
             except errors.Forbidden:
                 await ctx.send("I don't have perms to do that!")

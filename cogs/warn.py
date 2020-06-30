@@ -87,11 +87,11 @@ class Warn(commands.Cog):
                 "This is only a verbal warning, but on your next"
                 " warning you will be kicked from the server.")
         elif warnsno == 2:
-            msg += f" {member.mention} has been kicked."
+            msg += f" {member.mention} has been muted."
             await self.dm(member,
-                "This is your second warning, so you have been kicked."
-                " You may return to the server if you'd like, but"
-                " another offense will result in an indefinite ban.")
+                "This is your second warning, so you have been muted."
+                " You will be unmuted by staff at their discretion, but you"
+                " may contact staff via modmail after 24 hours if left muted.")
         elif warnsno >= 3:
             msg += f" {member.mention} has been banned."
             await self.dm(member,
@@ -100,7 +100,7 @@ class Warn(commands.Cog):
                 " message this bot after 24 hours to contact staff.")
             
         if reason:
-            msg += f" Warn reason: {reason}"
+            msg += f"\nWarn reason: {reason}"
 
         # Announce the warn
         await ctx.send(msg)
@@ -199,10 +199,10 @@ class Warn(commands.Cog):
             return await ctx.send("This member does not have any active warns on file.")
 
         msg = f":warning: {member}'s warns.\n"
-        for i, warn in enumerate(shortwarns):
+        for i, warn in enumerate(shortwarns, 1):
             msg += f"*{i}.* \"" + warn["reason"] + f"\" on {warn['timestamp']}"
             if hasperms:
-                msg += f"from {warn['author']}"
+                msg += f" from {warn['author']}"
             msg += "\n"
         msg += f"Total warns: {len(warnlist)}"
 

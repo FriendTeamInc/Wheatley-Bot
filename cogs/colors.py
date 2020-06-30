@@ -11,21 +11,19 @@ class Colors(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.colors = bot.roles["colors"]
 
     async def change(self, ctx, color, lang, cur_color, user):
         if not cur_color:
             await user.add_roles(color)
-            await ctx.send("{} {} {} added."
-                           "".format(user.mention, lang, color.name.lower()))
+            await ctx.send(f"{user.mention} {lang} {color.name} added.")
         elif cur_color != color:
             await user.remove_roles(cur_color)
             await user.add_roles(color)
-            await ctx.send("{} {} changed from {} to {}.".format(user.mention,
-                           lang, cur_color.name.lower(), color.name.lower()))
+            await ctx.send(f"{user.mention} {lang} changed from {cur_color.name} to {color.name}.")
         else:
             await user.remove_roles(color)
-            await ctx.send("{} {} {} removed."
-                           "".format(user.mention, lang, color.name.lower()))
+            await ctx.send(f"{user.mention} {lang} {color.name} removed.")
 
     @commands.command(pass_context=True, aliases=['colour'])
     async def color(self, ctx, colorstring=""):
@@ -33,34 +31,33 @@ class Colors(commands.Cog):
         user = ctx.message.author
         lang = (ctx.invoked_with).capitalize()
         if not colorstring:
-            await ctx.send("{} You forgot to choose a {}! You can see the full list with `.list{}`"
-                           "".format(user.mention, lang.lower(), lang.lower()))
+            await ctx.send(f"{user.mention} You forgot to choose a {lang}!"
+                            f"You can see the full list with `.list{lang}`")
             return
 
         colorrole = colorstring.lower()
 
         applied_colors = []
-        for color in self.bot.colors:
-            if self.bot.colors[color] in user.roles:
-                applied_colors.append(self.bot.colors[color])
+        for color in self.colors:
+            if self.colors[color] in user.roles:
+                applied_colors.append(self.colors[color])
         if applied_colors:
             cur_color = applied_colors[0]
         else:
             cur_color = None
 
-        if colorrole in self.bot.colors:
-            await self.change(ctx, self.bot.colors[colorrole], lang, cur_color, user)
+        if colorrole in self.colors:
+            await self.change(ctx, self.colors[colorrole], lang, cur_color, user)
         else:
-            await ctx.send("{} `{}` is not a permissible {}."
-                           "".format(user.mention, colorstring, lang))
+            await ctx.send(f"{user.mention} `{colorstring}` is not a permissible {lang}.")
 
     @commands.command(pass_context=True, aliases=['listcolours', 'listcolor', 'listcolour'])
     async def listcolors(self, ctx):
         """List available colors."""
-        colorlist = ""
-        for color in self.bot.colors:
-            colorlist += "- " + color + "\n"
-        await ctx.send(":art: **__Colored roles:__**\n" + colorlist)
+        colorlist = ":art: **__Colored roles:__**\n"
+        for color in self.colors:
+            colorlist += f"- {color}\n"
+        await ctx.send(colorlist)
 
 
 def setup(bot):
