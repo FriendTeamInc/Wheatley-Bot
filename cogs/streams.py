@@ -49,7 +49,7 @@ class Streams(commands.Cog):
                     await user.add_roles(self.streams[stream])
             
             await ctx.send(f"{user.mention} now has all stream notifs"
-                            f" {"enabled" if enable else "disabled"}.")
+                            f" {'enabled' if enable else 'disabled'}.")
 
             return
         
