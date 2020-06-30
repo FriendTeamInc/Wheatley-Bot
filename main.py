@@ -65,7 +65,7 @@ async def on_ready():
             if conf["roles"][confrole] != None: # check if role config exists
                 # iterate through list and add roles
                 bot.roles[confrole] = {}
-                for rolekey, rolename in conf["roles"][confrole]:
+                for rolekey, rolename in conf["roles"][confrole].items():
                     role = get(guild.roles, name=rolename)
                     bot.roles[roletype][rolekey.lower()] = role
 
