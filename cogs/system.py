@@ -6,6 +6,7 @@ from os.path import isfile
 
 from discord.ext import commands
 
+import json
 import toml
 import aiofiles as aiof
 
@@ -55,7 +56,7 @@ class System(commands.Cog):
     @commands.command(aliases=["addon"])
     async def addons(self, ctx):
         """Shows the addons that were meant to be loaded."""
-        cogsstring = "Cogs:"
+        cogsstring = ":gear: Cogs:"
         for cog in self.bot.cogs:
             cogsstring += f"\n- {cog}"
         await ctx.send(cogsstring)
