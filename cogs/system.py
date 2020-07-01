@@ -56,7 +56,7 @@ class System(commands.Cog):
     async def addons(self, ctx):
         """Shows the addons that were meant to be loaded."""
         cogsstring = "Cogs:"
-        for cog in bot.cogs:
+        for cog in self.bot.cogs:
             cogsstring += f"\n- {cog}"
         await ctx.send(cogsstring)
     
@@ -83,7 +83,7 @@ class System(commands.Cog):
     @commands.command()
     async def generatedb(self, ctx):
         """Generates a database file per user in a server."""
-        async for user in self.bot.guild.members:
+        for user in self.bot.guild.members:
             dbfile = f"db/{user.id}.json"
             userjson = {}
 

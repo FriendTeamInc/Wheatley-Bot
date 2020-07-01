@@ -157,8 +157,8 @@ async def on_member_join(user):
         async with aiof.open(dbfile, "r") as f:
             filejson = await f.read()
             userjson = json.loads(filejson)
-            
-            async for rolename in userjson["roles"]:
+
+            for rolename in userjson["roles"]:
                 role = get(guild.roles, name=role)
                 await user.add_roles(role)
 
