@@ -1,1 +1,1 @@
-Warn data is stored here, one file per user.
+One file per user, this is where each user's data is stored, with info on a person's warns, probations, saved roles, etc.

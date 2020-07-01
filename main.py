@@ -2,6 +2,7 @@
 
 from sys import exit
 from os import getenv
+from os.path import isfile
 from traceback import format_exception
 from asyncio import sleep
 
@@ -9,7 +10,9 @@ from discord import errors, Embed, Color, TextChannel
 from discord.ext import commands
 from discord.utils import get, escape_mentions
 
+import json
 import toml
+import aiofiles as aiof
 
 
 bot = commands.Bot(command_prefix='.')
@@ -25,6 +28,8 @@ userroles = ["color", "stream", "pronoun"]
 @bot.event
 async def on_ready():
     bot.conf = conf
+
+    bot.userroles = userroles
 
     # important role vars for error reporting
     missingroleskey = False
@@ -47,6 +52,10 @@ async def on_ready():
         bot.admin_role  = get(guild.roles, name="Admin")
         bot.staff_role  = get(guild.roles, name="Admin")
         bot.friend_role = get(guild.roles, name="Friend")
+
+        # User roles given by staff (TODO: make configurable via toml.)
+        bot.muted_role    = get(guild.roles, name="Muted")
+        bot.probated_role = get(guild.roles, name="Probated")
 
         # Dev channels
         bot.botdev_channel   = get(guild.channels, name="bot-dev")
@@ -136,7 +145,39 @@ async def logembed(user, stat, color):
     await bot.userlogs_channel.send("", embed=emb)
 
 @bot.event
-async def on_member_join(user): await logembed(user, "Joined", Color.green())
+async def on_member_join(user):
+    global bot
+
+    if bot.autoprobate:
+        pass
+
+    dbfile = f"db/{user.id}.json"
+
+    if isfile(dbfile):
+        async with aiof.open(dbfile, "r") as f:
+            filejson = await f.read()
+            userjson = json.loads(filejson)
+            
+            async for rolename in userjson["roles"]:
+                role = get(guild.roles, name=role)
+                await user.add_roles(role)
+
+            if userjson["muted"]: await user.add_roles(bot.muted_role)
+            if userjson["probated"]: await user.add_roles(bot.probated_role)
+    else:
+        async with aiof.open(dbfile, "w") as f:
+            userjson = {
+                "member": f"{user.name}#{user.discriminator}, {user.id}",
+                "muted": False,
+                "probated": False,
+                "roles": [],
+                "warns": []
+            }
+            filejson = json.dumps(userjson)
+            await f.write(filejson)
+
+    await logembed(user, "Joined", Color.green())
+
 
 @bot.event
 async def on_member_remove(user): await logembed(user, "Left", Color.red())

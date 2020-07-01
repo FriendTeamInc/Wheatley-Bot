@@ -1,0 +1,21 @@
+{
+	"member": "DiscordUser#0001, 000000000000000001",
+	
+	"muted": false,
+	"probated": false,
+
+	"roles": [
+		"BotFriend",
+		"Sky"
+	],
+
+	"warns": [
+		{
+			"warnno": 1,
+			"active": false,
+			"timestamp": "2020-06-26 02:20:19",
+			"reason": "Test warn.",
+			"author": "SomeMod"
+		}
+	]
+}

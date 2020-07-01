@@ -55,36 +55,28 @@ class Moderation(commands.Cog):
         except errors.Forbidden:
             await self.noperms(ctx)
 
+
     @commands.has_permissions(ban_members=True)
     @commands.command()
     async def ban(self, ctx, member: Member=None, *, reason: str=""):
         """Ban a member. (Staff Only)"""
         if not member:
-            await ctx.send("Please mention a user.")
-            return
-        if member == ctx.message.author:
-            await ctx.send("You cannot ban yourself!")
-            return
+            return await ctx.send("Please mention a user.")
+        elif member == ctx.message.author:
+            return await ctx.send("You can't ban yourself.")
         elif (self.bot.staff_role in member.roles and
               self.bot.owner_role not in ctx.message.author.roles):
-            await ctx.send("You may not ban another staffer")
-            return
+            return await ctx.send("You can't ban another staffer.")
         elif ctx.me is member:
-            await ctx.send("I am unable to ban myself to prevent stupid mistakes.\n"
-                           "Please ban me by hand!")
-            return
+            return await ctx.send("I can't ban myself, mate.")
         else:
             try:
-                dm_msg = ""
-                if not reason:
-                    dm_msg = "You have been banned from {}.".format(
-                        ctx.guild.name)
-                else:
-                    dm_msg = ("You have been banned from {} for the following reason:\n{}"
-                              "".format(ctx.guild.name, reason))
+                dm_msg = f"You've been banned from {ctx.guild.name}."
+                if reason:
+                    dm_msg += f"\nReason: {reason}"
                 await self.dm(member, dm_msg)
-                await member.ban(delete_message_days=0)
-                await ctx.send("I've banned {}.".format(member))
+                await member.ban(delete_message_days=0, reason=reason)
+                await ctx.send(f"I've banned {member}.")
             except errors.Forbidden:
                 await self.noperms(ctx)
 
@@ -99,10 +91,56 @@ class Moderation(commands.Cog):
             return
 
         try:
-            await ctx.guild.ban(member)
-            await ctx.send("I've banned ID: {}.".format(uid))
+            await member.ban(delete_message_days=0, reason=reason)
+            await ctx.send(f"I've banned ID: {uid}.")
         except errors.Forbidden:
             await self.noperms(ctx)
+
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.command()
+    async def mute(self, ctx, member: Member=None, *, reason: str=""):
+        """Mute a user. (Staff Only)"""
+        if not member:
+            return await ctx.send("Please mention a user.")
+        elif member == ctx.message.author:
+            return await ctx.send("You can't mute yourself.")
+        elif (self.bot.staff_role in member.roles and
+              self.bot.owner_role not in ctx.message.author.roles):
+            return await ctx.send("You can't mute another staffer.")
+        elif ctx.me is member:
+            return await ctx.send("I can't mute myself, mate.")
+
+        await member.add_roles(self.bot.muted_role)
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.command()
+    async def unmute(self, ctx, member: Member=None, *, reason: str=""):
+        """Mute a user. (Staff Only)"""
+        if not member:
+            return await ctx.send("Please mention a user.")
+        elif self.bot.muted_role not in member.roles:
+            return await ctx.send("This user is not muted.")
+
+        await member.remove_roles(self.bot.muted_role)
+
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.command()
+    async def probate(self, ctx, member: Member=None, *, reason: str=""):
+        """Probate a user. (Staff Only)"""
+        if not member:
+            return await ctx.send("Please mention a user.")
+        elif member == ctx.message.author:
+            return await ctx.send("You can't mute yourself.")
+        elif (self.bot.staff_role in member.roles and
+              self.bot.owner_role not in ctx.message.author.roles):
+            return await ctx.send("You can't mute another staffer.")
+        elif ctx.me is member:
+            return await ctx.send("I can't mute myself, mate.")
+
+        await member.add_roles(self.bot.muted_role)
+
 
     @commands.has_permissions(manage_messages=True)
     @commands.command()
@@ -113,7 +151,7 @@ class Moderation(commands.Cog):
         if reason == "":
             await channel.send(":lock: Channel locked.")
         else:
-            await channel.send(":lock: Channel locked. The given reason is: {}".format(reason))
+            await channel.send(f":lock: Channel locked. Reason: {reason}")
 
     @commands.has_permissions(manage_messages=True)
     @commands.command()

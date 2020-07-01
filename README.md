@@ -8,3 +8,4 @@ This code is licensed under the zlib license.
 # Dependencies
 * [discord.py](https://pypi.org/project/discord.py/) - The brains behind the bot.
 * [toml](https://pypi.org/project/toml/) - For parsing/managing the config.
+* [aiofiles](https://github.com/Tinche/aiofiles/) - For managing the database asynchronously.
