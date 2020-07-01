@@ -23,7 +23,7 @@ class System(commands.Cog):
         """Pulls git commits."""
         msgtxt = "Pulling new git commits."
         msg = await ctx.send(msgtxt)
-        run(["git", "stash", "save"])
+        run(["git", "stash"])
         run(["git", "pull"])
         run(["git", "stash", "clear"])
         
