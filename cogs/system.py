@@ -86,7 +86,13 @@ class System(commands.Cog):
         """Generates a database file per user in a server."""
         for user in self.bot.guild.members:
             dbfile = f"db/{user.id}.json"
-            userjson = {}
+            userjson = {
+                "member": f"{user.name}#{user.discriminator}, {user.id}",
+                "muted": False,
+                "probated": False,
+                "roles": [],
+                "warns": []
+            }
 
             if isfile(dbfile):
                 async with aiof.open(dbfile, "r") as f:
@@ -95,23 +101,7 @@ class System(commands.Cog):
 
                     if isinstance(userjson, list):
                         # convert warn db to new db style
-                        userjson = {
-                            "member": f"{user.name}#{user.discriminator}, {user.id}",
-                            "muted": False,
-                            "probated": False,
-                            "roles": [],
-                            "warns": tempjson
-                        }
-                    else:
-                        continue # db file already exists for this user.
-            else:
-                userjson = {
-                    "member": f"{user.name}#{user.discriminator}, {user.id}",
-                    "muted": False,
-                    "probated": False,
-                    "roles": [],
-                    "warns": []
-                }
+                        userjson["warns"] = tempjson
 
             async with aiof.open(dbfile, "w") as f:
                 filejson = json.dumps(userjson)
