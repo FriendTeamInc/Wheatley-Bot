@@ -10,6 +10,44 @@ import json
 import toml
 import aiofiles as aiof
 
+
+async def gen_user_json(user):
+    userjson = {
+        "member": f"{user.name}#{user.discriminator}, {user.id}",
+        "muted": False,
+        "probated": False,
+        "roles": [],
+        "warns": []
+    }
+
+    for role in user.roles:
+        userjson["roles"].append(role.name)
+
+    if self.bot.muted_role in user.roles:
+        userjson["muted"] = True
+
+    if self.bot.probated_role in user.roles:
+        userjson["probated"] = True
+
+    return userjson
+
+async def open_user_json(user):
+    userjson = await gen_user_json(user)
+
+    try:
+        async with aiof.open(f"db/{memberid}.json") as f:
+            userfile = await f.read()
+            userjson = json.loads(userfile)
+    except FileNotFoundError:
+        pass
+
+    return userjson
+
+async def write_user_json(user, userjson):
+    async with aiof.open(f"db/{user.id}.json", "w") as f:
+        await f.write(json.dumps(userjson))
+
+
 class System(commands.Cog):
     """
     Bot management commands, for use by staff only
@@ -84,28 +122,26 @@ class System(commands.Cog):
     @commands.command()
     async def generatedb(self, ctx):
         """Generates a database file per user in a server."""
-        for user in self.bot.guild.members:
-            dbfile = f"db/{user.id}.json"
-            userjson = {
-                "member": f"{user.name}#{user.discriminator}, {user.id}",
-                "muted": False,
-                "probated": False,
-                "roles": [],
-                "warns": []
-            }
+        async with ctx.typing():
+            for user in self.bot.guild.members:
+                userjson = await gen_user_json(user)
 
-            if isfile(dbfile):
-                async with aiof.open(dbfile, "r") as f:
-                    filejson = await f.read()
-                    tempjson = json.loads(filejson)
+                dbfile = f"db/{user.id}.json"
 
-                    if isinstance(userjson, list):
-                        # convert warn db to new db style
-                        userjson["warns"] = tempjson
+                if isfile(dbfile):
+                    async with aiof.open(dbfile, "r") as f:
+                        filejson = await f.read()
+                        print(dbfile, filejson)
+                        tempjson = json.loads(filejson)
 
-            async with aiof.open(dbfile, "w") as f:
-                filejson = json.dumps(userjson)
-                await f.write(filejson)
+                        if isinstance(userjson, list):
+                            # convert warn db to new db style
+                            userjson["warns"] = tempjson
+
+                async with aiof.open(dbfile, "w") as f:
+                    filejson = json.dumps(userjson)
+                    await f.write(filejson)
+        await ctx.send("Done!")
 
 
 def setup(bot):

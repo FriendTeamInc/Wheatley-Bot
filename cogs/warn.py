@@ -1,10 +1,14 @@
 # Warnings from the mods, for use by staff
 
-from json import load, dump
 from time import strftime, localtime
 
 from discord import Member, Embed, Color
 from discord.ext import commands
+
+import json
+import aiofiles as aiof
+
+from cogs.system import gen_user_json, open_user_json, write_user_json
 
 class Warn(commands.Cog):
     """
@@ -45,13 +49,13 @@ class Warn(commands.Cog):
 
         warnsno = 0
         warnlist = []
+        userjson = {}
 
         # Try to search db for any previous warns on file.
-        try:
-            with open(f"db/{memberid}.json") as f:
-                warnlist = load(f)
-        except FileNotFoundError:
-            pass
+        userjson = open_user_json(member)
+
+        warnlist = userjson["warns"]
+
 
         # Add warn
         warnlist.append({
@@ -69,35 +73,37 @@ class Warn(commands.Cog):
                 warnsno += 1
 
         # Prep to announce the warn
-        msg = f":triangular_flag_on_post:"
+        msg = f":warning: "
 
         # DM the member about the warn.
         if reason == "":
-            await self.dm(member,
-                "You have been warned in {}.".format(ctx.guild.name))
+            await self.dm(member, f"You have been warned in {ctx.guild.name}.")
         else:
-            await self.dm(member,
-                "You have been warned in {} for the following reason :\n{}\n"
-                "".format(ctx.guild.name, reason))
+            await self.dm(member, f"You have been warned in {ctx.guild.name}"
+                                  f" for the following reason :\n{reason}")
 
         # Do what needs to be done based on the active warns.
         if warnsno == 1:
-            msg += f" {member.mention}, this is a verbal warning."
+            msg += f"{member.mention}, this is a verbal warning."
             await self.dm(member,
                 "This is only a verbal warning, but on your next"
                 " warning you will be kicked from the server.")
         elif warnsno == 2:
-            msg += f" {member.mention} has been muted."
+            msg += f"{member.mention} has been muted."
             await self.dm(member,
                 "This is your second warning, so you have been muted."
                 " You will be unmuted by staff at their discretion, but you"
                 " may contact staff via modmail after 24 hours if left muted.")
+            await member.add_roles(self.bot.muted_role)
+            userjson["muted"] = True
         elif warnsno >= 3:
-            msg += f" {member.mention} has been banned."
+            msg += f"{member.mention} has been put on probation."
             await self.dm(member,
-                "You have been banned indefinitely as a result of the warn."
-                " If you would like to appeal this ban, please direct"
-                " message this bot after 24 hours to contact staff.")
+                "You have been put on probation indefinitely as a result of the warn."
+                " If you would like to appeal this probation, please direct message"
+                " this bot after 24 hours to contact staff.")
+            await member.add_roles(self.bot.probated_role)
+            userjson["probated"] = True
             
         if reason:
             msg += f"\nWarn reason: {reason}"
@@ -115,9 +121,10 @@ class Warn(commands.Cog):
         emb.add_field(name="Reason:", value=reason, inline=True)
         emb.add_field(name="Warn#:", value=warnsno, inline=True)
         await self.bot.userlogs_channel.send("", embed=emb)
+
+        userjson["warns"] = warnlist
         
-        with open(f"db/{memberid}.json", "w") as f:
-            dump(warnlist, f)
+        write_user_json(member, userjson)
 
 
     @commands.has_permissions(manage_roles=True)
@@ -134,12 +141,10 @@ class Warn(commands.Cog):
             return await ctx.send("Please properly specify a warn to undo. ( >=1 )")
 
         memberid = str(member.id)
-        warnlist = []
-        try:
-            with open(f"db/{memberid}.json") as f:
-                warnlist = load(f)
-        except FileNotFoundError:
-            return await ctx.send("This member does not have any warns on file.")
+
+        userjson = open_user_json(member)
+
+        warnlist = userjson["warns"]
 
         if len(warnlist) == 0:
             return await ctx.send("This member does not have any warns on file.")
@@ -165,8 +170,9 @@ class Warn(commands.Cog):
         emb.add_field(name="Warning#:", value=num, inline=True)
         await self.bot.userlogs_channel.send("", embed=emb)
 
-        with open(f"db/{memberid}.json", "w") as f:
-            dump(warnlist, f)
+        userjson["warns"] = warnlist
+
+        write_user_json(member, userjson)
 
 
     @commands.command(aliases=["listwarns"])
@@ -183,12 +189,10 @@ class Warn(commands.Cog):
             return await ctx.send(f"{ctx.message.author.mention} You're not allowed to view other peoples warns.")
 
         memberid = str(member.id)
-        warnlist = []
-        try:
-            with open(f"db/{memberid}.json") as f:
-                warnlist = load(f)
-        except FileNotFoundError:
-            return await ctx.send(f"Member {member} does not have any warns on file.")
+        
+        userjson = open_user_json(member)
+                
+        warnlist = userjson["warns"]
 
         shortwarns = []
         for warn in warnlist:

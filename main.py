@@ -140,7 +140,8 @@ async def on_ready():
 async def logembed(user, stat, color):
     global bot
     emb = Embed(title="Member "+stat, color=color)
-    emb.add_field(name="Member:", value=user.name, inline=True)
+    emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
+    emb.add_field(name="Member ID:", value=user.id, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.userlogs_channel.send("", embed=emb)
 
@@ -187,6 +188,28 @@ async def on_member_ban(guild, user): await logembed(user, "Banned", Color.dark_
 
 @bot.event
 async def on_member_unban(guild, user): await logembed(user, "Unbanned", Color.teal())
+
+
+@bot.event
+async def on_message_delete(msg):
+    global bot
+    emb = Embed(title="Message Deleted"+stat, color=Color.dark_red())
+    emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
+    emb.add_field(name="Member ID:", value=user.id, inline=True)
+    emb.add_field(name="Message:", value=msg.content, inline=True)
+    emb.set_thumbnail(url=user.avatar_url)
+    await bot.msglogs_channel.send("", embed=emb)
+
+@bot.event
+async def on_message_edit(before, after):
+    global bot
+    emb = Embed(title="Message Deleted"+stat, color=Color.dark_red())
+    emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
+    emb.add_field(name="Member ID:", value=user.id, inline=True)
+    emb.add_field(name="Before:", value=before.content, inline=True)
+    emb.add_field(name="After:", value=after.content, inline=True)
+    emb.set_thumbnail(url=user.avatar_url)
+    await bot.msglogs_channel.send("", embed=emb)
 
 
 @bot.event

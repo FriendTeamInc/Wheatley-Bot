@@ -1,6 +1,9 @@
 # Config file
 conf.toml
 
+# Anything in DB
+*.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
