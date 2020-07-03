@@ -5,6 +5,7 @@ from os import getenv
 from os.path import isfile
 from traceback import format_exception
 from asyncio import sleep
+from datetime import datetime
 
 from discord import errors, Embed, Color, TextChannel
 from discord.ext import commands
@@ -261,6 +262,13 @@ async def about(ctx):
 async def say(ctx, channel: TextChannel, *, msg: str=""):
     """The bot speaks!"""
     await channel.send(escape_mentions(msg))
+
+@bot.command()
+async def ping(ctx): # Thanks Ridley!
+    """Pong!"""
+    latency = datetime.now() - ctx.message.created_at
+    ptime = str(latency.microseconds / 1000.0)
+    await ctx.send(f":ping_pong: Pong! Latency: {ptime} ms")
 
 
 # Run the bot
