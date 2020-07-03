@@ -200,8 +200,7 @@ async def on_message_delete(msg):
     user = msg.author
 
     emb = Embed(title="Message Deleted", color=Color.dark_red())
-    emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
-    emb.add_field(name="Member ID:", value=user.id, inline=True)
+    emb.add_field(name="User:", value=f"<{user.id}> {user.name}#{user.discriminator}")
     emb.add_field(name="Message:", value=msg.content, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
     await bot.msglogs_channel.send("", embed=emb)
@@ -215,9 +214,8 @@ async def on_message_edit(before, after):
 
     user = before.author
 
-    emb = Embed(title="Message Edited", color=Color.dark_red())
-    emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
-    emb.add_field(name="Member ID:", value=user.id, inline=True)
+    emb = Embed(title="Message Edited", color=Color.blue())
+    emb.add_field(name="User:", value=f"<{user.id}> {user.name}#{user.discriminator}")
     emb.add_field(name="Before:", value=before.content, inline=True)
     emb.add_field(name="After:", value=after.content, inline=True)
     emb.set_thumbnail(url=user.avatar_url)
