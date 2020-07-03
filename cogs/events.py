@@ -1,6 +1,6 @@
 # Events that the bot calls.
 
-from discord import errors, Embed
+from discord import errors, Embed, Color, TextChannel
 from discord.ext import commands
 from discord.utils import get
 
