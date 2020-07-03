@@ -193,7 +193,11 @@ async def on_member_unban(guild, user): await logembed(user, "Unbanned", Color.t
 @bot.event
 async def on_message_delete(msg):
     global bot
-    emb = Embed(title="Message Deleted"+stat, color=Color.dark_red())
+
+    if before.author == bot.user:
+        return
+
+    emb = Embed(title="Message Deleted", color=Color.dark_red())
     emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
     emb.add_field(name="Member ID:", value=user.id, inline=True)
     emb.add_field(name="Message:", value=msg.content, inline=True)
@@ -203,7 +207,11 @@ async def on_message_delete(msg):
 @bot.event
 async def on_message_edit(before, after):
     global bot
-    emb = Embed(title="Message Deleted"+stat, color=Color.dark_red())
+
+    if before.author == bot.user:
+        return
+
+    emb = Embed(title="Message Edited", color=Color.dark_red())
     emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
     emb.add_field(name="Member ID:", value=user.id, inline=True)
     emb.add_field(name="Before:", value=before.content, inline=True)
