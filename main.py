@@ -94,6 +94,7 @@ async def on_ready():
 
     # Load addons
     bot.addons = [
+        "events",
         "moderation",
         "system",
         "warn"
@@ -136,91 +137,6 @@ async def on_ready():
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")
     #await bot.botdev_channel.send("Back online!")
-
-
-async def logembed(user, stat, color):
-    global bot
-    emb = Embed(title="Member "+stat, color=color)
-    emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
-    emb.add_field(name="Member ID:", value=user.id, inline=True)
-    emb.set_thumbnail(url=user.avatar_url)
-    await bot.userlogs_channel.send("", embed=emb)
-
-@bot.event
-async def on_member_join(user):
-    global bot
-
-    if bot.autoprobate:
-        pass
-
-    dbfile = f"db/{user.id}.json"
-
-    if isfile(dbfile):
-        async with aiof.open(dbfile, "r") as f:
-            filejson = await f.read()
-            userjson = json.loads(filejson)
-
-            for rolename in userjson["roles"]:
-                role = get(guild.roles, name=role)
-                await user.add_roles(role)
-
-            if userjson["muted"]: await user.add_roles(bot.muted_role)
-            if userjson["probated"]: await user.add_roles(bot.probated_role)
-    else:
-        async with aiof.open(dbfile, "w") as f:
-            userjson = {
-                "member": f"{user.name}#{user.discriminator}, {user.id}",
-                "muted": False,
-                "probated": False,
-                "roles": [],
-                "warns": []
-            }
-            filejson = json.dumps(userjson)
-            await f.write(filejson)
-
-    await logembed(user, "Joined", Color.green())
-
-
-@bot.event
-async def on_member_remove(user): await logembed(user, "Left", Color.red())
-
-@bot.event
-async def on_member_ban(guild, user): await logembed(user, "Banned", Color.dark_red())
-
-@bot.event
-async def on_member_unban(guild, user): await logembed(user, "Unbanned", Color.teal())
-
-
-@bot.event
-async def on_message_delete(msg):
-    global bot
-
-    if msg.author == bot.user:
-        return
-
-    user = msg.author
-
-    emb = Embed(title="Message Deleted", color=Color.dark_red())
-    emb.add_field(name="User:", value=f"<{user.id}> {user.name}#{user.discriminator}")
-    emb.add_field(name="Message:", value=msg.content, inline=True)
-    emb.set_thumbnail(url=user.avatar_url)
-    await bot.msglogs_channel.send("", embed=emb)
-
-@bot.event
-async def on_message_edit(before, after):
-    global bot
-
-    if before.author == bot.user:
-        return
-
-    user = before.author
-
-    emb = Embed(title="Message Edited", color=Color.blue())
-    emb.add_field(name="User:", value=f"<{user.id}> {user.name}#{user.discriminator}")
-    emb.add_field(name="Before:", value=before.content, inline=True)
-    emb.add_field(name="After:", value=after.content, inline=True)
-    emb.set_thumbnail(url=user.avatar_url)
-    await bot.msglogs_channel.send("", embed=emb)
 
 
 @bot.event
@@ -267,8 +183,7 @@ async def say(ctx, channel: TextChannel, *, msg: str=""):
 async def ping(ctx): # Thanks Ridley!
     """Pong!"""
     latency = datetime.now() - ctx.message.created_at
-    ptime = str(latency.microseconds / 1000.0)
-    await ctx.send(f":ping_pong: Pong! Latency: {ptime} ms")
+    await ctx.send(f":ping_pong: Pong! {latency.microseconds / 1000.0} ms")
 
 
 # Run the bot
