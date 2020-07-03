@@ -25,7 +25,7 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_member_join(user):
+    async def on_member_join(self, user):
         if self.bot.autoprobate:
             pass
 
@@ -57,17 +57,17 @@ class Events(commands.Cog):
         await self.logembed(user, "Joined", Color.green())
 
     @commands.Cog.listener()
-    async def on_member_remove(user): await self.logembed(user, "Left", Color.red())
+    async def on_member_remove(self, user): await self.logembed(user, "Left", Color.red())
 
     @commands.Cog.listener()
-    async def on_member_ban(guild, user): await self.logembed(user, "Banned", Color.dark_red())
+    async def on_member_ban(self, guild, user): await self.logembed(user, "Banned", Color.dark_red())
 
     @commands.Cog.listener()
-    async def on_member_unban(guild, user): await selflogembed(user, "Unbanned", Color.teal())
+    async def on_member_unban(self, guild, user): await selflogembed(user, "Unbanned", Color.teal())
 
 
     @commands.Cog.listener()
-    async def on_message_delete(msg):
+    async def on_message_delete(self, msg):
 
         if msg.author.bot:
             return
@@ -81,7 +81,7 @@ class Events(commands.Cog):
         await self.bot.msglogs_channel.send("", embed=emb)
 
     @commands.Cog.listener()
-    async def on_message_edit(before, after):
+    async def on_message_edit(self, before, after):
 
         if before.author.bot or before.content == after.content:
             return
