@@ -6,6 +6,7 @@ from discord.utils import get
 
 import json
 import aiofiles as aiof
+from os.path import isfile
 
 
 class Events(commands.Cog):
