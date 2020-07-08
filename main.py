@@ -49,18 +49,19 @@ async def on_ready():
 
         # Friends
         # Will be changed later to different roles to make it more server-agnostic
-        bot.owner_role  = get(guild.roles, name="Admin")
+        bot.owner_role  = get(guild.roles, name="Owner")
         bot.admin_role  = get(guild.roles, name="Admin")
         bot.staff_role  = get(guild.roles, name="Admin")
         bot.friend_role = get(guild.roles, name="Friend")
 
         # User roles given by staff (TODO: make configurable via toml.)
-        bot.muted_role    = get(guild.roles, name="Muted")
-        bot.probated_role = get(guild.roles, name="Probated")
+        bot.muted_role      = get(guild.roles, name="Muted")
+        bot.probated_role   = get(guild.roles, name="Probated")
+        bot.unapproved_role = get(guild.roles, name="Unapproved")
 
         # Dev channels
-        bot.botdev_channel   = get(guild.channels, name="bot-dev")
-        bot.botlogs_channel  = get(guild.channels, name="bot-logs")
+        bot.botdev_channel  = get(guild.channels, name="bot-dev")
+        bot.botlogs_channel = get(guild.channels, name="bot-logs")
 
         # User log channels (joins, leaves, message edits, etc.)
         bot.userlogs_channel = get(guild.channels, name="user-logs")
@@ -132,7 +133,6 @@ async def on_ready():
             emb.add_field(name="Key", value="\n".join(v["key"]), inline=True)
             emb.add_field(name="Role", value="\n".join(v["role"]), inline=True)
             await bot.botlogs_channel.send("", embed=emb)
-        #await bot.botlogs_channel.send("Patch these roles in your `conf.toml` or the roles manager dingus!")
 
     # We're in.
     print(f"Client logged in as {bot.user.name}, in the following guild : {bot.guild.name}")
@@ -177,7 +177,7 @@ async def about(ctx):
 @bot.command()
 async def say(ctx, channel: TextChannel, *, msg: str=""):
     """The bot speaks!"""
-    await channel.send(escape_mentions(msg))
+    await channel.send(msg)
 
 @bot.command()
 async def ping(ctx): # Thanks Ridley!

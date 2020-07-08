@@ -40,7 +40,8 @@ class Warn(commands.Cog):
         # Make sure not to allow certain people form being warned.
         if member == author:
             return await ctx.send("You can't warn yourself.")
-        elif self.bot.staff_role in member.roles:
+        elif (self.bot.staff_role in member.roles and
+              self.bot.owner_role not in ctx.message.author.roles):
             return await ctx.send("You can't warn staff.")
         elif ctx.me is member:
             return await ctx.send("I can't warn myself.")

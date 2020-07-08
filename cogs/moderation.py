@@ -132,14 +132,33 @@ class Moderation(commands.Cog):
         if not member:
             return await ctx.send("Please mention a user.")
         elif member == ctx.message.author:
-            return await ctx.send("You can't mute yourself.")
+            return await ctx.send("You can't probate yourself.")
         elif (self.bot.staff_role in member.roles and
               self.bot.owner_role not in ctx.message.author.roles):
-            return await ctx.send("You can't mute another staffer.")
+            return await ctx.send("You can't probate another staffer.")
         elif ctx.me is member:
-            return await ctx.send("I can't mute myself, mate.")
+            return await ctx.send("I can't probate myself, mate.")
 
-        await member.add_roles(self.bot.muted_role)
+        await member.add_roles(self.bot.probated_role)
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.command()
+    async def approve(self, ctx, member: Member=None, *, reason: str=""):
+        """Approves a user, to un-probate them. (Staff Only)"""
+        if not member:
+            return await ctx.send("Please mention a user.")
+        elif member == ctx.message.author:
+            return await ctx.send("You can't approve yourself.")
+        elif ctx.me is member:
+            return await ctx.send("I can't approve myself, mate.")
+        elif self.bot.unapproved_role in member.roles:
+            await member.remove_roles(self.bot.unapproved_role)
+            return await ctx.send(f"User {member} is approved.")
+        elif self.bot.probated_role in member.roles:
+            await member.remove_roles(self.bot.probated_role)
+            return await ctx.send(f"User {member} is unprobated.")
+        else:
+            return await ctx.send(f"Nothing to do for {member}")
 
 
     @commands.has_permissions(manage_messages=True)

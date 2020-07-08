@@ -1,6 +1,6 @@
 # Events that the bot calls.
 
-from discord import errors, Embed, Color, TextChannel
+from discord import errors, Embed, Color, DMChannel, TextChannel, Emoji, PartialEmoji
 from discord.ext import commands
 from discord.utils import get
 
@@ -16,6 +16,7 @@ class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
     async def logembed(self, user, stat, color):
         emb = Embed(title="Member "+stat, color=color)
         emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
@@ -28,6 +29,8 @@ class Events(commands.Cog):
     async def on_member_join(self, user):
         if self.bot.autoprobate:
             pass
+
+        await user.add_roles(self.bot.unapproved_role)
 
         dbfile = f"db/{user.id}.json"
 
@@ -67,10 +70,23 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_message_delete(self, msg):
-
+    async def on_message(self, msg):
         if msg.author.bot:
             return
+
+        if not isinstance(msg.channel, DMChannel):
+            return
+
+        # ModMail stuff here!
+
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, msg):
+        if msg.author.bot:
+            return
+
+        if isinstance(msg.channel, DMChannel):
+            pass # pass a message to modmail about this event
 
         user = msg.author
 
@@ -82,9 +98,11 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-
         if before.author.bot or before.content == after.content:
             return
+
+        if isinstance(msg.channel, DMChannel):
+            pass # pass a message to modmail about this event
 
         user = before.author
 
@@ -94,6 +112,23 @@ class Events(commands.Cog):
         emb.add_field(name="After:", value=after.content, inline=True)
         emb.set_thumbnail(url=user.avatar_url)
         await self.bot.msglogs_channel.send("", embed=emb)
+
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        msg = reaction.message
+        channel = msg.channel
+
+        if isinstance(reaction.emoji, (PartialEmoji, str)) or
+           not isinstance(channel, TextChannel) or
+           self.bot.unapproved_role not in user.roles or
+           channel.name != "rules":
+            return
+
+        if reaction.emoji.name == "gotcha": # Let this be changable later
+            await user.remove_roles(self.bot.unapproved_role)
+
+        await reaction.remove(user)
 
 
 
