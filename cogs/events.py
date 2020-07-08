@@ -119,11 +119,11 @@ class Events(commands.Cog):
         msg = reaction.message
         channel = msg.channel
 
-        if isinstance(reaction.emoji, (PartialEmoji, str)) or
-           not isinstance(channel, TextChannel) or
-           self.bot.unapproved_role not in user.roles or
-           channel.name != "rules":
-            return
+        # Exit early if any of these are true
+        if isinstance(reaction.emoji, (PartialEmoji, str)): return
+        if not isinstance(channel, TextChannel):            return
+        if self.bot.unapproved_role not in user.roles:      return
+        if channel.name != "rules":                         return
 
         if reaction.emoji.name == "gotcha": # Let this be changable later
             await user.remove_roles(self.bot.unapproved_role)
