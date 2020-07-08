@@ -91,8 +91,8 @@ class Events(commands.Cog):
         user = msg.author
 
         emb = Embed(title="Message Deleted", color=Color.dark_red())
-        emb.add_field(name="User:", value=f"<{user.id}> {user.name}#{user.discriminator}")
         emb.add_field(name="Message:", value=msg.content, inline=True)
+        emb.add_field(name="User:", value=f"{user.name}#{user.discriminator}\n<{user.id}>")
         emb.set_thumbnail(url=user.avatar_url)
         await self.bot.msglogs_channel.send("", embed=emb)
 
@@ -107,9 +107,10 @@ class Events(commands.Cog):
         user = before.author
 
         emb = Embed(title="Message Edited", color=Color.blue())
-        emb.add_field(name="User:", value=f"<{user.id}> {user.name}#{user.discriminator}")
         emb.add_field(name="Before:", value=before.content, inline=True)
         emb.add_field(name="After:", value=after.content, inline=True)
+        emb.add_field(name="Channel:", value=msg.channel.name)
+        emb.add_field(name="User:", value=f"{user.name}#{user.discriminator}\n<{user.id}>", inline=True)
         emb.set_thumbnail(url=user.avatar_url)
         await self.bot.msglogs_channel.send("", embed=emb)
 

@@ -47,6 +47,10 @@ async def on_ready():
         # Do not invite your bot to more than one server.
         bot.guild = guild
 
+        # Autoprobation (off by default)
+        # To prevent raids
+        bot.autoprobate = False
+
         # Friends
         # Will be changed later to different roles to make it more server-agnostic
         bot.owner_role  = get(guild.roles, name="Owner")
