@@ -68,7 +68,7 @@ class ModMail(commands.Cog):
         if ctx.channel.name not in self.modmaillookup:
             return await ctx.send("This isn't a modmail thread!")
 
-        # parse message and pass it to the user in question
+        # Grab the user by their id, which is in the channel title
         try:
             user = self.bot.get_user(int(ctx.channel.name.split("-")[1]))
         except ValueError:
@@ -82,25 +82,58 @@ class ModMail(commands.Cog):
 
     @commands.has_role("Admin")
     @commands.command()
-    async def close(self, ctx, outcome: str, *, reason: str):
+    async def close(self, ctx, outcome: str="", *, reason: str=""):
         """
         Closes a modmail thread.
         Additional replies will not be sent, and the outcome dealt (unmuted, kicked, etc)
         Outcomes: unmute, unprobate, kick, ban
         """
-        if outcome == "unmute":
-            pass
-        elif outcome == "unprobate":
-            pass
-        elif outcome == "kick":
-            pass
-        elif outcome == "ban":
-            pass
-        else:
-            return await ctx.send(f"Consequence {outcome} is not valid!")
 
+        # check if in modmail thread, otherwise complain
+        if ctx.channel.name not in self.modmaillookup:
+            return await ctx.send("This isn't a modmail thread!")
+
+        # Grab the user by their id, which is in the channel title
+        try:
+            user = self.bot.get_user(int(ctx.channel.name.split("-")[1]))
+        except ValueError:
+            return await ctx.send("This isn't a modmail thread!")
+
+        if user is None:
+            return await ctx.send("User not found!")
+
+        # A reason to close is required!
         if reason == "":
             return await ctx.send(f"A reason must be provided for the consequence!")
+
+        if outcome == "unmute":
+            await user.remove_roles(self.bot.muted_role)
+            await self.dm(user, f"You have been unmuted in {self.bot.guild.name}. Understand that next time you may be put on probation.")
+            emb = Embed(title="User Unmuted (MM)", color=Color.greyple())
+            emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
+            emb.add_field(name="Member ID:", value=user.id, inline=True)
+            emb.add_field(name="Reason:", value=reason, inline=True)
+            emb.set_thumbnail(url=user.avatar_url)
+            await self.bot.userlogs_channel.send("", embed=emb)
+        elif outcome == "unprobate":
+            await user.remove_roles(self.bot.probated_role)
+            await self.dm(user, f"You have been unprobated in {self.bot.guild.name}. Understand that next time you may be banned outright.")
+            emb = Embed(title="User Unprobated (MM)", color=Color.darker_grey())
+            emb.add_field(name="Username:", value=f"{user.name}#{user.discriminator}", inline=True)
+            emb.add_field(name="Member ID:", value=user.id, inline=True)
+            emb.add_field(name="Reason:", value=reason, inline=True)
+            emb.set_thumbnail(url=user.avatar_url)
+            await self.bot.userlogs_channel.send("", embed=emb)
+        elif outcome == "kick":
+            await self.dm(user, f"You have been kicked from {self.bot.guild.name}.")
+            await user.kick(reason="(MM) - "+reason)
+        elif outcome == "ban":
+            await self.dm(user, f"You have been banned from {self.bot.guild.name}.")
+            await user.ban(delete_message_days=0, reason="(MM) - "+reason)
+        else:
+            return await ctx.send(f"Consequence \"{outcome}\" is not valid!")
+
+        await ctx.channel.delete(reason=f"Closed - {outcome}'d - {reason}")
 
 
 def setup(bot):
