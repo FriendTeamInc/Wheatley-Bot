@@ -15,6 +15,15 @@ import json
 import toml
 import aiofiles as aiof
 
+import logging
+
+
+logger = logging.getLogger("discord")
+logger.setLevel(logging.INFO)
+handler = logging.FileHandler(filename="wheatley.log", encoding="utf-8", mode="w")
+handler.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s"))
+logger.addHandler(handler)
+
 
 bot = commands.Bot(command_prefix='.')
 try:
