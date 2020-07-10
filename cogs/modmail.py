@@ -67,7 +67,10 @@ class ModMail(commands.Cog):
             return await ctx.send("This isn't a modmail thread!")
 
         # parse message and pass it to the user in question
-        user = self.bot.get_user(ctx.channel.name.split("-")[1])
+        try:
+            user = self.bot.get_user(int(ctx.channel.name.split("-")[1]))
+        except ValueError:
+            return await ctx.send("This isn't a modmail thread!")
 
         if user is None:
             return await ctx.send("User not found!")
