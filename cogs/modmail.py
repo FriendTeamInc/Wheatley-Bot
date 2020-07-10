@@ -11,6 +11,13 @@ class ModMail(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.modmaillookup = {} # key: userid (str), value: channel object
+        
+    async def dm(self, member: Member, message: str):
+        """DM the member and catch an eventual exception."""
+        try:
+            await member.send(message)
+        except:
+            pass
 
     @commands.Cog.listener()
     async def on_message(self, msg):

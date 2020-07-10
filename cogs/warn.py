@@ -53,7 +53,7 @@ class Warn(commands.Cog):
         userjson = {}
 
         # Try to search db for any previous warns on file.
-        userjson = open_user_json(member)
+        userjson = await open_user_json(member)
 
         warnlist = userjson["warns"]
 
@@ -125,7 +125,7 @@ class Warn(commands.Cog):
 
         userjson["warns"] = warnlist
         
-        write_user_json(member, userjson)
+        await write_user_json(member, userjson)
 
 
     @commands.has_permissions(manage_roles=True)
@@ -143,7 +143,7 @@ class Warn(commands.Cog):
 
         memberid = str(member.id)
 
-        userjson = open_user_json(member)
+        userjson = await open_user_json(member)
 
         warnlist = userjson["warns"]
 
@@ -173,7 +173,7 @@ class Warn(commands.Cog):
 
         userjson["warns"] = warnlist
 
-        write_user_json(member, userjson)
+        await write_user_json(member, userjson)
 
 
     @commands.command(aliases=["listwarns"])
@@ -191,7 +191,7 @@ class Warn(commands.Cog):
 
         memberid = str(member.id)
         
-        userjson = open_user_json(member)
+        userjson = await open_user_json(member)
                 
         warnlist = userjson["warns"]
 
