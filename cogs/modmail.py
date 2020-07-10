@@ -75,7 +75,7 @@ class ModMail(commands.Cog):
         if user is None:
             return await ctx.send("User not found!")
 
-        self.dm(user, f"Staff: {msg}")
+        await self.dm(user, f"Staff: {msg}")
 
 
 def setup(bot):
