@@ -35,7 +35,7 @@ async def open_user_json(bot, user):
     userjson = await gen_user_json(bot, user)
 
     try:
-        async with aiof.open(f"db/{memberid}.json") as f:
+        async with aiof.open(f"db/{user.id}.json") as f:
             userfile = await f.read()
             userjson = json.loads(userfile)
     except FileNotFoundError:
