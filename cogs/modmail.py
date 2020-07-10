@@ -14,13 +14,20 @@ class ModMail(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        if msg.author.bot:
+        user = msg.author
+
+        if user.bot:
+            return
+
+        if self.bot.muted_role not in user.roles:
+            return
+
+        if self.bot.probated_role not in user.roles:
             return
 
         if not isinstance(msg.channel, DMChannel):
             return
 
-        user = msg.author
         userthread = f"user-{user.id}"
 
         # Create "thread" channel for each mod mail if it doesnt exist.
