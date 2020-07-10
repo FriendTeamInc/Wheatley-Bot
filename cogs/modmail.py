@@ -1,6 +1,6 @@
 # ModMail system 
 
-from discord import Member, Embed, Color, PermissionOverwrite
+from discord import Member, Embed, Color, DMChannel, TextChannel, PermissionOverwrite
 from discord.ext import commands
 
 class ModMail(commands.Cog):
