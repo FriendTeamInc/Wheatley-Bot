@@ -59,9 +59,11 @@ class ModMail(commands.Cog):
         # Post embed to thread.
         await self.modmaillookup[userthread].send("", embed=emb)
 
+
     @commands.has_role("Admin")
     @commands.command()
     async def reply(self, ctx, *, msg: str):
+        """Reply to a modmail thread (send a message to the appealer)."""
         # check if in modmail thread, otherwise complain
         if ctx.channel.name not in self.modmaillookup:
             return await ctx.send("This isn't a modmail thread!")
@@ -76,6 +78,29 @@ class ModMail(commands.Cog):
             return await ctx.send("User not found!")
 
         await self.dm(user, f"Staff: {msg}")
+
+
+    @commands.has_role("Admin")
+    @commands.command()
+    async def close(self, ctx, outcome: str, *, reason: str):
+        """
+        Closes a modmail thread.
+        Additional replies will not be sent, and the outcome dealt (unmuted, kicked, etc)
+        Outcomes: unmute, unprobate, kick, ban
+        """
+        if outcome == "unmute":
+            pass
+        elif outcome == "unprobate":
+            pass
+        elif outcome == "kick":
+            pass
+        elif outcome == "ban":
+            pass
+        else:
+            return await ctx.send(f"Consequence {outcome} is not valid!")
+
+        if reason == "":
+            return await ctx.send(f"A reason must be provided for the consequence!")
 
 
 def setup(bot):

@@ -98,6 +98,40 @@ class System(commands.Cog):
         for cog in self.bot.cogs:
             cogsstring += f"\n- {cog}"
         await ctx.send(cogsstring)
+
+    @commands.has_role("BotFriend")
+    @commands.command(aliases=["reloadaddon"])
+    async def reload(self, ctx, cog: str=""):
+        """Reloads a cog."""
+
+        addonfail = False
+        emb = None
+        def cog_reload(addon):
+            try:
+                self.bot.reload_extension(f"cogs.{addon}")
+                print(f"{addon} cog reloaded.")
+            except Exception as e:
+                if not addonfail:
+                    emb = Embed(title="Reload", description="Failed to reload Cog", color=Color.dark_blue())
+                addonfail = True
+                emb.add_field(name=addon, value=f"{type(e).__name__} : {e}", inline=True)
+                print(f"Failed to reload {addon} :\n{type(e).__name__} : {e}")
+
+        if cog == "all" or cog == "":
+            for addon in self.bot.addons:
+                cog_reload(addon)
+        elif cog in self.bot.addons:
+            cog_reload(cog)
+        else:
+            return await ctx.send(f"Cog {cog} not a valid addon!")
+
+        if addonfail:
+            try:
+                await bot.botlogs_channel.send("", embed=emb)
+            except errors.Forbidden:
+                pass
+
+        await ctx.send("Reload complete.")
     
     @commands.has_role("BotFriend")
     @commands.command()
