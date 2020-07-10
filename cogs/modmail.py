@@ -11,8 +11,8 @@ class ModMail(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.modmaillookup = {} # key: userid (str), value: channel object
-        
-    async def dm(self, member: Member, message: str):
+
+    async def dm(self, member, message: str):
         """DM the member and catch an eventual exception."""
         try:
             await member.send(message)
@@ -27,7 +27,7 @@ class ModMail(commands.Cog):
         user = self.bot.guild.get_member(msg.author.id)
 
         if user is None:
-            return await msg.author.send("Nope.")
+            return await self.dm(msg.author,"Nope.")
 
         if self.bot.muted_role not in user.roles:
             return
@@ -73,7 +73,7 @@ class ModMail(commands.Cog):
         if user is None:
             return await ctx.send("User not found!")
 
-        user.send(f"Staff: {msg}")
+        self.dm(user, f"Staff: {msg}")
 
 
 def setup(bot):
