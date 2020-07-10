@@ -53,7 +53,7 @@ class ModMail(commands.Cog):
 
         # Create embed of message from user
         emb = Embed(color=Color.blurple())
-        emb.set_author(f"{user.name}#{user.discriminator}-{user.id}")
+        emb.set_author(name=f"{user.name}#{user.discriminator}-{user.id}", icon_url=user.avatar_url)
         emb.add_field(name="msg:", value=msg.content)
 
         # Post embed to thread.
