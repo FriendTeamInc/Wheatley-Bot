@@ -113,8 +113,8 @@ class Events(commands.Cog):
 
         emb = Embed(title="Message Edited", color=Color.blue())
         emb.add_field(name="Before:", value=before.content, inline=True)
-        emb.add_field(name="After:", value=after.content, inline=True)
-        emb.add_field(name="Channel:", value=before.channel.name)
+        emb.add_field(name="After:", value=after.content)
+        emb.add_field(name="Channel:", value=before.channel.name, inline=True)
         emb.add_field(name="User:", value=f"{user.name}#{user.discriminator}\n<{user.id}>", inline=True)
         emb.set_thumbnail(url=user.avatar_url)
         await self.bot.msglogs_channel.send("", embed=emb)
@@ -124,6 +124,7 @@ class Events(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         user = payload.member
         channel = self.bot.get_channel(payload.channel_id)
+        message = self.bot.get_message(payload.message_id)
         emote = payload.emoji.name
 
         # Exit early if any of these are true
@@ -131,13 +132,10 @@ class Events(commands.Cog):
         if channel.name != "rules":              return
 
         if emote == "gotcha": # Let this be changable later
-            if self.bot.unapproved_role not in user.roles:
+            if self.bot.unapproved_role in user.roles:
                 await user.remove_roles(self.bot.unapproved_role)
 
-        await reaction.remove(user)
-
-        await self.bot.msglogs_channel.send(f"Reaction detected! (testing stuff rn) {reaction}")
-
+        await message.clear_reactions()
 
 
 def setup(bot):
