@@ -11,7 +11,7 @@ import toml
 import aiofiles as aiof
 
 
-async def gen_user_json(user):
+async def gen_user_json(bot, user):
     userjson = {
         "member": f"{user.name}#{user.discriminator}, {user.id}",
         "muted": False,
@@ -23,16 +23,16 @@ async def gen_user_json(user):
     for role in user.roles:
         userjson["roles"].append(role.name)
 
-    if self.bot.muted_role in user.roles:
+    if bot.muted_role in user.roles:
         userjson["muted"] = True
 
-    if self.bot.probated_role in user.roles:
+    if bot.probated_role in user.roles:
         userjson["probated"] = True
 
     return userjson
 
-async def open_user_json(user):
-    userjson = await gen_user_json(user)
+async def open_user_json(bot, user):
+    userjson = await gen_user_json(bot, user)
 
     try:
         async with aiof.open(f"db/{memberid}.json") as f:
@@ -124,7 +124,7 @@ class System(commands.Cog):
         """Generates a database file per user in a server."""
         async with ctx.typing():
             for user in self.bot.guild.members:
-                userjson = await gen_user_json(user)
+                userjson = await gen_user_json(self, user)
 
                 dbfile = f"db/{user.id}.json"
 
