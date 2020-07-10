@@ -88,8 +88,12 @@ class Events(commands.Cog):
 
         if isinstance(msg.channel, DMChannel):
             pass # pass a message to modmail about this event
+            return # for now, ignore
 
         user = msg.author
+
+        if msg.content is None:
+            msg.content = "error:missing"
 
         emb = Embed(title="Message Deleted", color=Color.dark_red())
         emb.add_field(name="Message:", value=msg.content, inline=True)
@@ -102,7 +106,7 @@ class Events(commands.Cog):
         if before.author.bot or before.content == after.content:
             return
 
-        if isinstance(msg.channel, DMChannel):
+        if isinstance(before.channel, DMChannel):
             pass # pass a message to modmail about this event
 
         user = before.author
@@ -110,7 +114,7 @@ class Events(commands.Cog):
         emb = Embed(title="Message Edited", color=Color.blue())
         emb.add_field(name="Before:", value=before.content, inline=True)
         emb.add_field(name="After:", value=after.content, inline=True)
-        emb.add_field(name="Channel:", value=msg.channel.name)
+        emb.add_field(name="Channel:", value=before.channel.name)
         emb.add_field(name="User:", value=f"{user.name}#{user.discriminator}\n<{user.id}>", inline=True)
         emb.set_thumbnail(url=user.avatar_url)
         await self.bot.msglogs_channel.send("", embed=emb)
@@ -124,13 +128,15 @@ class Events(commands.Cog):
         # Exit early if any of these are true
         if isinstance(reaction.emoji, (PartialEmoji, str)): return
         if not isinstance(channel, TextChannel):            return
-        if self.bot.unapproved_role not in user.roles:      return
         if channel.name != "rules":                         return
 
         if reaction.emoji.name == "gotcha": # Let this be changable later
-            await user.remove_roles(self.bot.unapproved_role)
+            if self.bot.unapproved_role not in user.roles:
+                await user.remove_roles(self.bot.unapproved_role)
 
         await reaction.remove(user)
+
+        await self.bot.msglogs_channel.send(f"Reaction detected! (testing stuff rn) {reaction}")
 
 
 
