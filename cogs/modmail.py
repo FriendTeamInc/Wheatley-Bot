@@ -14,10 +14,13 @@ class ModMail(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, msg):
-        user = msg.author
-
-        if user.bot:
+        if msg.author.bot:
             return
+
+        user = self.bot.guild.get_member(msg.author.id)
+
+        if user is None:
+            return await msg.author.send("Nope.")
 
         if self.bot.muted_role not in user.roles:
             return
