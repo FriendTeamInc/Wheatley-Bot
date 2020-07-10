@@ -124,7 +124,7 @@ class Events(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         user = payload.member
         channel = self.bot.get_channel(payload.channel_id)
-        message = self.bot.get_message(payload.message_id)
+        message = await channel.fetch_message(payload.message_id)
         emote = payload.emoji.name
 
         # Exit early if any of these are true
@@ -136,6 +136,9 @@ class Events(commands.Cog):
                 await user.remove_roles(self.bot.unapproved_role)
 
         await message.clear_reactions()
+
+        await self.bot.msglogs_channel.send(f"Reaction detected! (testing stuff rn) {reaction}")
+
 
 
 def setup(bot):
