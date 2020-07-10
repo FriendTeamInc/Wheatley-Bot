@@ -121,16 +121,16 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        msg = reaction.message
-        channel = msg.channel
+    async def on_raw_reaction_add(self, payload):
+        user = payload.member
+        channel = self.bot.get_channel(payload.channel_id)
+        emote = payload.emoji.name
 
         # Exit early if any of these are true
-        if isinstance(reaction.emoji, (PartialEmoji, str)): return
-        if not isinstance(channel, TextChannel):            return
-        if channel.name != "rules":                         return
+        if not isinstance(channel, TextChannel): return
+        if channel.name != "rules":              return
 
-        if reaction.emoji.name == "gotcha": # Let this be changable later
+        if emote == "gotcha": # Let this be changable later
             if self.bot.unapproved_role not in user.roles:
                 await user.remove_roles(self.bot.unapproved_role)
 
