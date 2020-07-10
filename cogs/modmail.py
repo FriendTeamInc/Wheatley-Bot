@@ -27,12 +27,11 @@ class ModMail(commands.Cog):
         user = self.bot.guild.get_member(msg.author.id)
 
         if user is None:
-            return await self.dm(msg.author,"Nope.")
-
-        if self.bot.muted_role not in user.roles:
             return
 
-        if self.bot.probated_role not in user.roles:
+        if self.bot.muted_role in user.roles or self.bot.probated_role in user.roles:
+            pass
+        else:
             return
 
         if not isinstance(msg.channel, DMChannel):
