@@ -46,14 +46,14 @@ class ModMail(commands.Cog):
                 userthread,
                 overwrites = overwrites,
                 category = self.bot.modmail_category,
-                topic = f"{user.name}#{user.discriminator}'s ModMail Appeal thread."
+                topic = f"{user.name}#{user.discriminator}'s ModMail appeal thread."
             )
 
             self.modmaillookup[userthread] = mailthread
 
         # Create embed of message from user
         emb = Embed(color=Color.blurple())
-        emb.author(f"{user.name}#{user.discriminator}-{user.id}")
+        emb.set_author(f"{user.name}#{user.discriminator}-{user.id}")
         emb.add_field(name="msg:", value=msg.content)
 
         # Post embed to thread.
