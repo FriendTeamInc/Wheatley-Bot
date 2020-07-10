@@ -95,7 +95,7 @@ class ModMail(commands.Cog):
 
         # Grab the user by their id, which is in the channel title
         try:
-            user = self.bot.get_user(int(ctx.channel.name.split("-")[1]))
+            user = self.bot.guild.get_member(int(ctx.channel.name.split("-")[1]))
         except ValueError:
             return await ctx.send("This isn't a modmail thread!")
 
