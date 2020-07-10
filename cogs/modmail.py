@@ -132,6 +132,9 @@ class ModMail(commands.Cog):
             await user.ban(delete_message_days=0, reason="(MM) - "+reason)
         else:
             return await ctx.send(f"Consequence \"{outcome}\" is not valid!")
+            
+        userthread = f"user-{user.id}"
+        del self.modmaillookup[userthread]
 
         await ctx.channel.delete(reason=f"Closed - {outcome}'d - {reason}")
 
