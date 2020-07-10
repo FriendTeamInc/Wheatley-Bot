@@ -8,6 +8,8 @@ import json
 import aiofiles as aiof
 from os.path import isfile
 
+from cogs.system import gen_user_json, write_user_json
+
 
 class Events(commands.Cog):
     """
@@ -62,30 +64,8 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, user):
-        dbfile = f"db/{user.id}.json"
-
-        if isfile(dbfile):
-            async with aiof.open(dbfile, "r") as f:
-                filejson = await f.read()
-                userjson = json.loads(filejson)
-
-                for rolename in userjson["roles"]:
-                    role = get(guild.roles, name=role)
-                    await user.add_roles(role)
-
-                if userjson["muted"]: await user.add_roles(self.bot.muted_role)
-                if userjson["probated"]: await user.add_roles(self.bot.probated_role)
-        else:
-            async with aiof.open(dbfile, "w") as f:
-                userjson = {
-                    "member": f"{user.name}#{user.discriminator}, {user.id}",
-                    "muted": False,
-                    "probated": False,
-                    "roles": [],
-                    "warns": []
-                }
-                filejson = json.dumps(userjson)
-                await f.write(filejson)
+        userjson = await gen_user_json(self.bot, user)
+        await write_user_json(user, userjson)
 
         await self.logembed(user, "Left", Color.red())
 
@@ -102,13 +82,12 @@ class Events(commands.Cog):
             return
 
         if isinstance(msg.channel, DMChannel):
-            pass # pass a message to modmail about this event
-            return # for now, ignore
+            return # ignore, this is handled in modmail for dm's
 
         user = msg.author
 
-        if msg.content is None:
-            msg.content = "error:missing"
+        if msg.content is None or msg.content == "":
+            return
 
         emb = Embed(title="Message Deleted", color=Color.dark_red())
         emb.add_field(name="Message:", value=msg.content, inline=True)
