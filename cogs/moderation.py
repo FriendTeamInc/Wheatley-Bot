@@ -123,6 +123,7 @@ class Moderation(commands.Cog):
             return await ctx.send("This user is not muted.")
 
         await member.remove_roles(self.bot.muted_role)
+        await ctx.send(f"User {member} has been muted.")
 
 
     @commands.has_permissions(manage_roles=True)
@@ -140,6 +141,8 @@ class Moderation(commands.Cog):
             return await ctx.send("I can't probate myself, mate.")
 
         await member.add_roles(self.bot.probated_role)
+        await ctx.send(f"User {member} has been put on probation.")
+
 
     @commands.has_permissions(manage_roles=True)
     @commands.command()

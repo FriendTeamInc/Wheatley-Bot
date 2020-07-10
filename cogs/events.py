@@ -61,24 +61,39 @@ class Events(commands.Cog):
         await self.logembed(user, "Joined", Color.green())
 
     @commands.Cog.listener()
-    async def on_member_remove(self, user): await self.logembed(user, "Left", Color.red())
+    async def on_member_remove(self, user):
+        dbfile = f"db/{user.id}.json"
+
+        if isfile(dbfile):
+            async with aiof.open(dbfile, "r") as f:
+                filejson = await f.read()
+                userjson = json.loads(filejson)
+
+                for rolename in userjson["roles"]:
+                    role = get(guild.roles, name=role)
+                    await user.add_roles(role)
+
+                if userjson["muted"]: await user.add_roles(self.bot.muted_role)
+                if userjson["probated"]: await user.add_roles(self.bot.probated_role)
+        else:
+            async with aiof.open(dbfile, "w") as f:
+                userjson = {
+                    "member": f"{user.name}#{user.discriminator}, {user.id}",
+                    "muted": False,
+                    "probated": False,
+                    "roles": [],
+                    "warns": []
+                }
+                filejson = json.dumps(userjson)
+                await f.write(filejson)
+
+        await self.logembed(user, "Left", Color.red())
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user): await self.logembed(user, "Banned", Color.dark_red())
 
     @commands.Cog.listener()
     async def on_member_unban(self, guild, user): await selflogembed(user, "Unbanned", Color.teal())
-
-
-    @commands.Cog.listener()
-    async def on_message(self, msg):
-        if msg.author.bot:
-            return
-
-        if not isinstance(msg.channel, DMChannel):
-            return
-
-        # ModMail stuff here!
 
 
     @commands.Cog.listener()
@@ -136,9 +151,6 @@ class Events(commands.Cog):
                 await user.remove_roles(self.bot.unapproved_role)
 
         await message.clear_reactions()
-
-        await self.bot.msglogs_channel.send(f"Reaction detected! (testing stuff rn) {reaction}")
-
 
 
 def setup(bot):

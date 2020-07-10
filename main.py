@@ -71,6 +71,8 @@ async def on_ready():
         bot.userlogs_channel = get(guild.channels, name="user-logs")
         bot.msglogs_channel  = get(guild.channels, name="msg-logs")
 
+        bot.modmail_category = get(guild.categories, name="MODMAIL")
+
         if conf["roles"] == None:
             missingroleskey = True
             break
@@ -101,6 +103,7 @@ async def on_ready():
     bot.addons = [
         "events",
         "moderation",
+        "modmail",
         "system",
         "warn"
     ]
