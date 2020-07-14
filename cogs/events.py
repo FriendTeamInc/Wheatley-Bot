@@ -43,7 +43,7 @@ class Events(commands.Cog):
                 userjson = json.loads(filejson)
 
                 for rolename in userjson["roles"]:
-                    role = get(guild.roles, name=role)
+                    role = get(self.bot.guild.roles, name=role)
                     await user.add_roles(role)
 
                 if userjson["muted"]: await user.add_roles(self.bot.muted_role)
@@ -73,7 +73,7 @@ class Events(commands.Cog):
     async def on_member_ban(self, guild, user): await self.logembed(user, "Banned", Color.dark_red())
 
     @commands.Cog.listener()
-    async def on_member_unban(self, guild, user): await selflogembed(user, "Unbanned", Color.teal())
+    async def on_member_unban(self, guild, user): await self.logembed(user, "Unbanned", Color.teal())
 
 
     @commands.Cog.listener()

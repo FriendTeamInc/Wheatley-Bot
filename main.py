@@ -18,13 +18,6 @@ import aiofiles as aiof
 import logging
 
 
-logger = logging.getLogger("discord")
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(filename="wheatley.log", encoding="utf-8", mode="w")
-handler.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s"))
-logger.addHandler(handler)
-
-
 bot = commands.Bot(command_prefix='.')
 try:
     conf = toml.load("conf.toml")
@@ -180,6 +173,14 @@ async def on_command_error(ctx, error):
         tb = format_exception(type(error), error, error.__traceback__)
         print(''.join(tb))
         await bot.botdev_channel.send(botdev_msg + '\n```' + ''.join(tb) + '\n```')
+
+@bot.event
+async def on_error(event, *args, **kwargs):
+    global bot
+    await bot.botlogs_channel.send(f"An error occured while processing an event.")
+    txt = f"Event: {event}\n"
+    txt += f"```py\n{format_exception()}```"
+    await bot.botlogs_channel.send(txt)
 
 
 @bot.command(aliases=['source'])
