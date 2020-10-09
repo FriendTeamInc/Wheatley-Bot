@@ -41,7 +41,7 @@ class Games(commands.Cog):
         """List available games."""
         gamelist = ":game_die: **__game roles:__**\n"
         gamelist += "Example: `.games tf2` gives you the \"Team Fortress 2\" role.\n"
-        for gamerole, gamename in enumerate(self.games):
+        for gamerole, gamename in self.games.items():
             gamelist += f"- {gamerole} - {gamename}\n"
         await ctx.send(gamelist)
 
