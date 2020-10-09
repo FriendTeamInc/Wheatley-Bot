@@ -36,7 +36,7 @@ class Games(commands.Cog):
         else:
             await ctx.send(f"{user.mention} `{gamestring}` is not a game we track.")
 
-    @commands.command(pass_context=True, aliases=['listpros'])
+    @commands.command(pass_context=True, aliases=['listgame'])
     async def listgames(self, ctx):
         """List available games."""
         gamelist = ":game_die: **__game roles:__**\n"
