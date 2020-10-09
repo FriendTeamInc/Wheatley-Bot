@@ -7,7 +7,7 @@ from discord.utils import get
 
 class Streams(commands.Cog):
     """
-    Color commands
+    Stream commands
     """
 
     def __init__(self, bot):
@@ -23,8 +23,8 @@ class Streams(commands.Cog):
             await user.remove_roles(stream)
             await ctx.send(f"{user.mention} stream role {stream.name} removed.")
 
-    @commands.command(aliases=['stream'])
-    async def streamer(self, ctx, streamstring=""):
+    @commands.command(aliases=['streamer'])
+    async def stream(self, ctx, streamstring=""):
         """Choose your stream notif role."""
         user = ctx.message.author
         lang = (ctx.invoked_with).capitalize()
@@ -67,6 +67,7 @@ class Streams(commands.Cog):
     async def liststreams(self, ctx):
         """List available streams to be notified of."""
         streamlist = ":tv: **__Streamer Notif roles:__**\n- All\n"
+        streamlist += "Example: `.stream Juici` gives you a role to be pinged when Juice goes live.\n"
         for stream in self.streams:
             streamlist += f"- {stream.title()}\n"
         await ctx.send(streamlist)

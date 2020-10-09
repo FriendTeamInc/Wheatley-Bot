@@ -28,7 +28,7 @@ token = "discord.token.right-here"
 	pink   = "Pink"
 	blue   = "Blue"
 
-	# Roles for stream notifications. Not case sensitive
+	# Roles for stream notifications. Not case sensitive.
 	[roles.streams]
 	apex    = "ApexStream"  # https://www.twitch.tv/notquiteapex
 	kigu    = "KiguStream"  # https://www.twitch.tv/batkigu
@@ -38,9 +38,16 @@ token = "discord.token.right-here"
 
 	# Roles for pronouns.
 	[roles.pronouns]
-	theythem = "they/them"
-	sheher   = "she/her"
-	hehim    = "he/him"
+	"they\them" = "they/them"
+	"she\her"   = "she/her"
+	"he\him"    = "he/him"
+	
+	# Roles for games, if anyone wants to play
+	[roles.games]
+	minecraft = "Minecraft"
+	tf2       = "Team Fortress 2"
+	phasma    = "Phasmaphobia"
+	amongus   = "Among Us"
 
 # channel names for some debugging stuff, not needed but they help with issues.
 [dev]

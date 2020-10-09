@@ -25,7 +25,7 @@ except FileNotFoundError:
     exit("Config not found!")
 
 
-userroles = ["color", "stream", "pronoun"]
+userroles = ["color", "stream", "pronoun", "game"]
 
 
 @bot.event
