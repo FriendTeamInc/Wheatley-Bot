@@ -99,7 +99,7 @@ async def on_ready():
                 # roles not found in config
                 hasroles[roletype] = False
 
-    await bot.botlogs_channel.send("Coming back online.")
+    #await bot.botlogs_channel.send("Coming back online.")
 
     # Load addons
     bot.addons = [
