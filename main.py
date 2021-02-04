@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sys import exit
+from sys import exit, exc_info
 from os import getenv
 from os.path import isfile
 from traceback import format_exception
@@ -179,7 +179,7 @@ async def on_error(event, *args, **kwargs):
     global bot
     await bot.botlogs_channel.send(f"An error occured while processing an event.")
     txt = f"Event: {event}\n"
-    txt += f"```py\n{format_exception()}```"
+    txt += f"```py\n{format_exception(exc_info())}```"
     await bot.botlogs_channel.send(txt)
 
 
