@@ -200,7 +200,7 @@ async def say(ctx, channel: TextChannel, *, msg: str=""):
 @commands.has_any_role("Admin", "StreamerFriend")
 @bot.command()
 async def live(ctx, *, msg: str=""):
-    channel = await bot.get_channel(701114508088836226)
+    channel = bot.get_channel(701114508088836226)
     await channel.send(msg)
 
 @bot.command()
