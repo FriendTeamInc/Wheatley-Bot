@@ -31,6 +31,7 @@ userroles = ["color", "stream", "pronoun", "game"]
 @bot.event
 async def on_ready():
     bot.conf = conf
+    bot.formatter = commands.formatter
 
     bot.userroles = userroles
 
@@ -172,14 +173,15 @@ async def on_command_error(ctx, error):
         botdev_msg = f"Exception occured in `{ctx.command}` in {ctx.message.channel.mention}"
         tb = format_exception(type(error), error, error.__traceback__)
         print(''.join(tb))
-        await bot.botdev_channel.send(botdev_msg + '\n```' + ''.join(tb) + '\n```')
+        await bot.botdev_channel.send(botdev_msg + '\n```py' + ''.join(tb) + '\n```')
 
 @bot.event
 async def on_error(event, *args, **kwargs):
     global bot
     await bot.botlogs_channel.send(f"An error occured while processing an event.")
     txt = f"Event: {event}\n"
-    txt += f"```py\n{format_exception(exc_info())}```"
+    (exc_type, exc_value, exc_tb) = exc_info()
+    txt += f"```py\n{format_exception(exc_type, exc_value, exc_tb)}```"
     await bot.botlogs_channel.send(txt)
 
 
