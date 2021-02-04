@@ -31,7 +31,6 @@ userroles = ["color", "stream", "pronoun", "game"]
 @bot.event
 async def on_ready():
     bot.conf = conf
-    bot.formatter = commands.formatter
 
     bot.userroles = userroles
 
