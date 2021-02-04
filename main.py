@@ -191,10 +191,16 @@ async def about(ctx):
         "https://github.com/NotQuiteApex/Wheatley-Bot")
 
 
-@commands.has_role("Admin")
+@commands.has_any_role("Admin")
 @bot.command()
 async def say(ctx, channel: TextChannel, *, msg: str=""):
     """The bot speaks!"""
+    await channel.send(msg)
+
+@commands.has_any_role("Admin", "StreamerFriend")
+@bot.command()
+async def live(ctx, *, msg: str=""):
+    channel = await bot.get_channel(701114508088836226)
     await channel.send(msg)
 
 @bot.command()
