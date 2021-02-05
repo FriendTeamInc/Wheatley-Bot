@@ -107,10 +107,10 @@ async def on_ready():
                 bot.stream_notif_channel = roledata
             else:
                 bot.streams[rolekey] = conf["streams"][rolekey]["role"]
-                bot.streams_data[conf["streams"][rolekey]["user"]] = [
+                bot.streams_data[conf["streams"][rolekey]["user"]] = {
                     "link": conf["streams"][rolekey]["link"],
                     "role": conf["streams"][rolekey]["role"]
-                ]
+                }
         
 
     await bot.botlogs_channel.send("Back online!")
