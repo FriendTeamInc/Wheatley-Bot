@@ -104,7 +104,7 @@ async def on_ready():
         bot.streams_data = {}
         for rolekey, roledata in conf["streams"].items():
             if rolekey == "notif_channel":
-                bot.stream_notif_channel = roledata
+                bot.streams_notif_channel = roledata
             else:
                 bot.streams[rolekey] = conf["streams"][rolekey]["role"]
                 bot.streams_data[conf["streams"][rolekey]["user"]] = {
