@@ -121,9 +121,9 @@ class Streams(commands.Cog):
             role = get(ctx.guild.roles, name=self.streams_data[ctx.author.id]["role"])
             link = self.streams_data[ctx.author.id]["link"]
             if msg == "":
-                channel.send(role.mention + " " + link)
+                await channel.send(role.mention + " " + link)
             else:
-                channel.send(role.mention + " " + msg + " " + link)
+                await channel.send(role.mention + " " + msg + " " + link)
 
 
 def setup(bot):
