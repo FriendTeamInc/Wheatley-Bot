@@ -102,6 +102,8 @@ async def on_ready():
         # stream specific role data
         bot.streams = {}
         bot.streams_data = {}
+        bot.streams_notif_channel = None
+        await bot.botlogs_channel.send(str(conf["streams"]))
         for rolekey, roledata in conf["streams"].items():
             if rolekey == "notif_channel":
                 bot.streams_notif_channel = roledata
@@ -210,12 +212,6 @@ async def about(ctx):
 @bot.command()
 async def say(ctx, channel: TextChannel, *, msg: str=""):
     """The bot speaks!"""
-    await channel.send(msg)
-
-@commands.has_any_role("Admin", "StreamerFriend")
-@bot.command()
-async def live(ctx, *, msg: str=""):
-    channel = bot.get_channel(701114508088836226)
     await channel.send(msg)
 
 @bot.command()
