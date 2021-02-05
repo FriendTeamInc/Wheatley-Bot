@@ -113,7 +113,7 @@ class Streams(commands.Cog):
         else:
             await ctx.send("That stream doesn't exist!")
     
-    @commands.has_any_role("StreamFriend")
+    @commands.has_any_role("StreamerFriend")
     @commands.command()
     async def live(self, ctx, *, msg=""):
         if ctx.author.id in self.streams_data:

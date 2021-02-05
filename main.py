@@ -103,7 +103,6 @@ async def on_ready():
         bot.streams = {}
         bot.streams_data = {}
         bot.streams_notif_channel = None
-        await bot.botlogs_channel.send(str(conf["streams"]))
         for rolekey, roledata in conf["streams"].items():
             if rolekey == "notif_channel":
                 bot.streams_notif_channel = roledata
