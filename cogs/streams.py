@@ -13,7 +13,9 @@ class Streams(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.guild = bot.guild
-        self.streams = bot.roles["streams"]
+        self.streams = bot.streams
+        self.streams_data = bot.streams_data
+        self.streams_notif_channel = bot.streams_notif_channel
 
     async def change(self, ctx, stream, lang, cur_stream, user):
         if stream not in cur_stream:
@@ -110,6 +112,18 @@ class Streams(commands.Cog):
                 await ctx.send("I don't have perms to do that!")
         else:
             await ctx.send("That stream doesn't exist!")
+    
+    @commands.has_any_role("StreamFriend")
+    @commands.command()
+    async def live(self, ctx, *, msg=""):
+        if ctx.author.id in self.streams_data:
+            channel = get(ctx.guild.channels, name=self.streams_notif_channel)
+            role = get(ctx.guild.roles, name=self.streams_data[ctx.author.id]["role"])
+            link = self.streams_data[ctx.author.id]["link"]
+            if msg == "":
+                channel.send(role.mention + " " + link)
+            else:
+                channel.send(role.mention + " " + msg + " " + link)
 
 
 def setup(bot):

@@ -25,7 +25,7 @@ except FileNotFoundError:
     exit("Config not found!")
 
 
-userroles = ["color", "stream", "pronoun", "game"]
+userroles = ["color", "pronoun", "game"]
 
 
 @bot.event
@@ -98,6 +98,20 @@ async def on_ready():
             else:
                 # roles not found in config
                 hasroles[roletype] = False
+        
+        # stream specific role data
+        bot.streams = {}
+        bot.streams_data = {}
+        for rolekey, roledata in conf["streams"]:
+            if rolekey == "notif_channel":
+                bot.stream_notif_channel = roledata
+            else:
+                bot.streams[rolekey] = conf["streams"][rolekey]["role"]
+                bot.streams_data[conf["streams"][rolekey]["user"]] = [
+                    "link": conf["streams"][rolekey]["link"],
+                    "role": conf["streams"][rolekey]["role"]
+                ]
+        
 
     await bot.botlogs_channel.send("Back online!")
 
@@ -106,6 +120,7 @@ async def on_ready():
         "events",
         "moderation",
         "modmail",
+        "streams",
         "system",
         "warn"
     ]
