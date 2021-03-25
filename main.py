@@ -7,7 +7,7 @@ from traceback import format_exception
 from asyncio import sleep
 from datetime import datetime
 
-from discord import errors, Embed, Color, TextChannel
+from discord import Intents, errors, Embed, Color, TextChannel
 from discord.ext import commands
 from discord.utils import get, escape_mentions
 
@@ -17,7 +17,7 @@ import aiofiles as aiof
 
 import logging
 
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.typing = False
 intents.presences = False
 intents.members = True
