@@ -29,7 +29,7 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_member_join(self, member):
+    async def on_member_join(self, user):
         if self.bot.autoprobate:
             pass
 
@@ -60,7 +60,7 @@ class Events(commands.Cog):
                 filejson = json.dumps(userjson)
                 await f.write(filejson)
 
-        await self.logembed(member, "Joined", Color.green())
+        await self.logembed(user, "Joined", Color.green())
 
     @commands.Cog.listener()
     async def on_member_remove(self, user):
