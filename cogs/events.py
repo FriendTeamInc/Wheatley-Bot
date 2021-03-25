@@ -37,35 +37,35 @@ class Events(commands.Cog):
 
         dbfile = f"db/{user.id}.json"
 
-        if isfile(dbfile):
-            async with aiof.open(dbfile, "r") as f:
-                filejson = await f.read()
-                userjson = json.loads(filejson)
+        # if isfile(dbfile):
+            # async with aiof.open(dbfile, "r") as f:
+                # filejson = await f.read()
+                # userjson = json.loads(filejson)
 
-                for rolename in userjson["roles"]:
-                    role = get(self.bot.guild.roles, name=role)
-                    await user.add_roles(role)
+                # for rolename in userjson["roles"]:
+                    # role = get(self.bot.guild.roles, name=role)
+                    # await user.add_roles(role)
 
-                if userjson["muted"]: await user.add_roles(self.bot.muted_role)
-                if userjson["probated"]: await user.add_roles(self.bot.probated_role)
-        else:
-            async with aiof.open(dbfile, "w") as f:
-                userjson = {
-                    "member": f"{user.name}#{user.discriminator}, {user.id}",
-                    "muted": False,
-                    "probated": False,
-                    "roles": [],
-                    "warns": []
-                }
-                filejson = json.dumps(userjson)
-                await f.write(filejson)
+                # if userjson["muted"]: await user.add_roles(self.bot.muted_role)
+                # if userjson["probated"]: await user.add_roles(self.bot.probated_role)
+        # else:
+            # async with aiof.open(dbfile, "w") as f:
+                # userjson = {
+                    # "member": f"{user.name}#{user.discriminator}, {user.id}",
+                    # "muted": False,
+                    # "probated": False,
+                    # "roles": [],
+                    # "warns": []
+                # }
+                # filejson = json.dumps(userjson)
+                # await f.write(filejson)
 
         await self.logembed(user, "Joined", Color.green())
 
     @commands.Cog.listener()
     async def on_member_remove(self, user):
-        userjson = await gen_user_json(self.bot, user)
-        await write_user_json(user, userjson)
+        #userjson = await gen_user_json(self.bot, user)
+        #await write_user_json(user, userjson)
 
         await self.logembed(user, "Left", Color.red())
 
