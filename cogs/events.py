@@ -33,7 +33,7 @@ class Events(commands.Cog):
         if self.bot.autoprobate:
             pass
 
-        await user.add_roles(self.bot.unapproved_role)
+        #await user.add_roles(self.bot.unapproved_role)
 
         dbfile = f"db/{user.id}.json"
 
