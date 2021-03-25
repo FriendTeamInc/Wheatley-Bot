@@ -60,17 +60,18 @@ class System(commands.Cog):
     @commands.command(aliases=["pull"])
     async def botupdate(self, ctx, restarting:bool=False):
         """Pulls git commits."""
-        msgtxt = "Pulling new git commits."
-        msg = await ctx.send(msgtxt)
-        run(["git", "stash"])
-        run(["git", "pull"])
-        run(["git", "stash", "clear"])
-        
-        msgtxt += " Changes pulled!"
-        if restarting:
-            msgtxt += " Restarting now."
-        
-        await msg.edit(content=msgtxt)
+        async with ctx.typing():
+            msgtxt = "Pulling new git commits."
+            msg = await ctx.send(msgtxt)
+            run(["git", "stash"])
+            run(["git", "pull"])
+            run(["git", "stash", "clear"])
+            
+            msgtxt += " Changes pulled!"
+            if restarting:
+                msgtxt += " Restarting now."
+            
+            await msg.edit(content=msgtxt)
             
 
     # Bot is meant to run under systemctl to auto-restart it.
