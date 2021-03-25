@@ -54,7 +54,7 @@ class Colors(commands.Cog):
     @commands.command(pass_context=True, aliases=['listcolours', 'listcolor', 'listcolour'])
     async def listcolors(self, ctx):
         """List available colors."""
-        colorlist = ":art: **__Colored roles:__**\n"
+        colorlist = ":art: **__Colored roles:__** `.color yellow` gives you the yellow color for your name.\n"
         for color in self.colors:
             colorlist += f"- {color}\n"
         await ctx.send(colorlist)

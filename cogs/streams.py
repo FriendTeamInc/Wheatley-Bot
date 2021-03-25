@@ -68,8 +68,8 @@ class Streams(commands.Cog):
     @commands.command(aliases=['liststreamers', 'liststreamer', 'liststream'])
     async def liststreams(self, ctx):
         """List available streams to be notified of."""
-        streamlist = ":tv: **__Streamer Notif roles:__**\n- All\n"
-        streamlist += "Example: `.stream Juici` gives you a role to be pinged when Juice goes live.\n"
+        streamlist = ":tv: **__Streamer Notif roles:__ **"
+        streamlist += "Example: `.stream Juici` gives you a role to be pinged when Juice goes live.\n- All\n"
         for stream in self.streams:
             streamlist += f"- {stream.title()}\n"
         await ctx.send(streamlist)
@@ -113,7 +113,7 @@ class Streams(commands.Cog):
         else:
             await ctx.send("That stream doesn't exist!")
     
-    @commands.has_any_role("StreamerFriend")
+    @commands.has_any_role("BestFriend")
     @commands.command()
     async def live(self, ctx, *, msg=""):
         if ctx.author.id in self.streams_data:

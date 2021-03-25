@@ -38,7 +38,7 @@ class Pronouns(commands.Cog):
     @commands.command(pass_context=True, aliases=['listpros'])
     async def listpronouns(self, ctx):
         """List available pronouns."""
-        pronounlist = ":crown: **__pronoun roles:__**\n"
+        pronounlist = ":crown: **__pronoun roles:__** "
         pronounlist += "Example: `.pronouns they/them` gives you nonbinary pronouns.\n"
         for pronoun in self.pronouns:
             pronounlist += f"- {pronoun}\n"
