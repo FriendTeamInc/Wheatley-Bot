@@ -43,7 +43,7 @@ class Events(commands.Cog):
                 userjson = json.loads(filejson)
 
                 for rolename in userjson["roles"]:
-                    role = get(self.bot.guild.roles, name=role)
+                    role = get(self.bot.guild.roles, name=rolename)
                     await user.add_roles(role)
 
                 if userjson["muted"]: await user.add_roles(self.bot.muted_role)
