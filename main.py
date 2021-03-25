@@ -17,8 +17,12 @@ import aiofiles as aiof
 
 import logging
 
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+intents.members = True
 
-bot = commands.Bot(command_prefix='.')
+bot = commands.Bot(command_prefix='.', intents=intents)
 try:
     conf = toml.load("conf.toml")
 except FileNotFoundError:
