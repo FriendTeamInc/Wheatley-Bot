@@ -114,7 +114,7 @@ async def on_ready():
                 bot.streams[rolekey] = conf["streams"][rolekey]["role"]
                 bot.streams_data[conf["streams"][rolekey]["user"]] = {
                     "link": conf["streams"][rolekey]["link"],
-                    "role": conf["streams"][rolekey]["role"]
+                    "role": get(guild.roles, name=conf["streams"][rolekey]["role"])
                 }
         
 
