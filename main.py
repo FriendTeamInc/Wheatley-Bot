@@ -111,10 +111,10 @@ async def on_ready():
             if rolekey == "notif_channel":
                 bot.streams_notif_channel = roledata
             else:
-                bot.streams[rolekey] = conf["streams"][rolekey]["role"]
+                bot.streams[rolekey] = get(guild.roles, name=conf["streams"][rolekey]["role"])
                 bot.streams_data[conf["streams"][rolekey]["user"]] = {
                     "link": conf["streams"][rolekey]["link"],
-                    "role": get(guild.roles, name=conf["streams"][rolekey]["role"])
+                    "role": conf["streams"][rolekey]["role"]
                 }
         
 
